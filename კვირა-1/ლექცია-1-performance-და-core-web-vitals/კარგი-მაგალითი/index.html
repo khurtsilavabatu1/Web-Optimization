@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>კარგი მაგალითი — Web Performance</title>
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #1: PRECONNECT
+        ==========================================
+        ბრაუზერს ვეუბნებით წინასწარ დაუკავშირდეს ამ domain-ებს.
+        DNS lookup + TCP + TLS წინასწარ ხდება = დროის დაზოგვა!
+    -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #2: FONT WITH font-display:swap
+        ==========================================
+        display=swap — ბრაუზერი ჯერ system font-ით აჩვენებს,
+        custom font ჩატვირთვის შემდეგ შეცვლის.
+        მომხმარებელი მაშინვე ხედავს ტექსტს, არ ელოდება ფონტს.
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #3: CRITICAL CSS INLINE
+        ==========================================
+        ყველაზე მნიშვნელოვანი CSS პირდაპირ HTML-შია.
+        ამით ბრაუზერს არ სჭირდება დამატებითი CSS ფაილის მოლოდინი
+        „above the fold" კონტენტის დასახატად.
+    -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans Georgian', system-ui, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+        .gallery { padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
+        .gallery h2 { margin-bottom: 20px; font-size: 1.5rem; }
+        .gallery-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .gallery-grid img { width: 280px; height: 200px; object-fit: cover; border-radius: 8px; background: #e0e0e0; }
+        .products { padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
+        .products h2 { margin-bottom: 20px; font-size: 1.5rem; }
+        #search { width: 100%; padding: 12px 20px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; font-family: inherit; }
+        #search:focus { outline: none; border-color: #667eea; }
+        #product-count { margin-bottom: 10px; color: #666; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        thead { background: #667eea; color: white; }
+        th { padding: 12px 16px; text-align: left; font-weight: 600; }
+        td { padding: 10px 16px; border-bottom: 1px solid #eee; }
+        tbody tr:hover { background: #f8f8ff; }
+    </style>
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #4: NON-CRITICAL CSS ASYNC LOAD
+        ==========================================
+        არა-კრიტიკული CSS (animations, hover effects, stats, footer)
+        ასინქრონულად იტვირთება — არ ბლოკავს rendering-ს!
+        media="print" → onload="this.media='all'" ტრიკი
+    -->
+    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #5: JAVASCRIPT defer
+        ==========================================
+        defer ატრიბუტი = HTML parsing არ ჩერდება.
+        script ჩამოიტვირთება პარალელურად და შესრულდება
+        მხოლოდ HTML parsing-ის დასრულების შემდეგ.
+    -->
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>პროდუქტების კატალოგი</h1>
+        <p>ეს არის კარგი მაგალითი — ოპტიმიზირებული Web Performance</p>
+    </header>
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #6: IMAGES WITH DIMENSIONS (CLS FIX!)
+        ==========================================
+        ყველა სურათს აქვს width და height ატრიბუტები.
+        ბრაუზერმა იცის ზუსტად რამდენი ადგილი დაუთმოს
+        სანამ სურათი ჩაიტვირთება = არა layout shift!
+    -->
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #7: LAZY LOADING
+        ==========================================
+        loading="lazy" — ბრაუზერი მხოლოდ მაშინ ჩატვირთავს სურათს
+        როცა viewport-თან ახლოს იქნება. პირველი 2 სურათი eager-ია
+        (ისინი viewport-ში ჩანს, LCP-ისთვის ადრე სჭირდება).
+    -->
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #8: OPTIMIZED IMAGE SIZE
+        ==========================================
+        w=600 ნაცვლად w=3000-ის!
+        ეკრანზე 280px-ით ჩანს, 600px საკმარისია Retina-სთვისაც.
+        ზომა: ~50KB ნაცვლად ~2MB-ის = 40x დაზოგვა!
+    -->
+    <section class="gallery">
+        <h2>გალერეა</h2>
+        <div class="gallery-grid">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75" alt="Mountain" width="280" height="200" loading="eager" fetchpriority="high">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=75" alt="Nature" width="280" height="200" loading="eager">
+            <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=75" alt="Forest" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=600&q=75" alt="Waterfall" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=75" alt="Fog" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=75" alt="Trees" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&q=75" alt="Field" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600&q=75" alt="Flowers" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=75" alt="Lake" width="280" height="200" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&q=75" alt="Valley" width="280" height="200" loading="lazy">
+        </div>
+    </section>
+
+    <!--
+        ==========================================
+        ✅ გადაწყვეტა #9: BANNER WITH RESERVED SPACE (CLS FIX!)
+        ==========================================
+        ბანერისთვის ადგილი წინასწარ დაჯავშნულია min-height-ით.
+        როცა კონტენტი ჩაისმება, არაფერი არ გადაინაცვლებს!
+    -->
+    <div id="banner-container" style="min-height: 100px; margin: 20px;">
+    </div>
+
+    <section class="products">
+        <h2>პროდუქტები</h2>
+        <input type="text" id="search" placeholder="ძებნა პროდუქტებში...">
+        <div id="product-count"></div>
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>სახელი</th>
+                    <th>ფასი</th>
+                    <th>თარიღი</th>
+                    <th>კატეგორია</th>
+                </tr>
+            </thead>
+            <tbody id="product-body">
+            </tbody>
+        </table>
+        <!--
+            ==========================================
+            ✅ გადაწყვეტა #10: PAGINATION
+            ==========================================
+            1000 row-ის ნაცვლად მხოლოდ 50 ჩანს.
+            „მეტის ჩვენება" ღილაკით ემატება.
+        -->
+        <div style="text-align: center; margin: 20px 0;">
+            <button id="load-more" style="padding: 12px 30px; font-size: 16px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 8px; cursor: pointer; font-family: inherit;">
+                მეტის ჩვენება
+            </button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <h2>სტატისტიკა</h2>
+        <div id="stats-content"></div>
+    </section>
+
+    <footer>
+        <p>კარგი მაგალითი — Web Optimization კურსი</p>
+    </footer>
+</body>
+</html>

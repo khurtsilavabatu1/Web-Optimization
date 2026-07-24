@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- PROBLEM: missing lang attribute on <html> (Accessibility + SEO) -->
+    <!-- PROBLEM: missing <meta charset> -->
+    <!-- PROBLEM: missing <meta viewport> (SEO mobile) -->
+    <!-- PROBLEM: missing <meta description> (SEO) -->
+    <!-- PROBLEM: missing <title> -->
+
+    <!-- PROBLEM: render-blocking CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PROBLEM: render-blocking JS in head without defer/async -->
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- PROBLEM: no skip-to-content link (Accessibility) -->
+
+    <div class="header">
+        <!-- PROBLEM: no semantic HTML - div instead of <header>, <nav>, <main>, <footer> -->
+        <div class="logo">GeorgiaNews</div>
+        <div class="nav">
+            <!-- PROBLEM: no <nav> element, no aria labels -->
+            <!-- PROBLEM: non-descriptive link text "click here" (SEO + Accessibility) -->
+            <a href="#">მთავარი</a>
+            <a href="#">სიახლეები</a>
+            <a href="#">დაგვიკავშირდით</a>
+            <a href="#">მეტი ინფორმაციისთვის დააჭირეთ აქ</a>
+        </div>
+    </div>
+
+    <div class="hero">
+        <!-- PROBLEM: image without alt attribute (Accessibility) -->
+        <!-- PROBLEM: image without width/height attributes (CLS - layout shift) -->
+        <!-- PROBLEM: large image not lazy loaded -->
+        <img src="https://picsum.photos/1920/1080">
+        <div class="hero-text">
+            <!-- PROBLEM: low contrast text - light text on light background (Accessibility) -->
+            <p class="low-contrast">ბოლო სიახლეები საქართველოდან</p>
+        </div>
+    </div>
+
+    <!-- PROBLEM: skipped heading level - goes from no h1 to h3 (Accessibility) -->
+    <h3>პოპულარული სტატიები</h3>
+
+    <div class="articles">
+        <!-- PROBLEM: excessive DOM - many nested unnecessary divs -->
+        <div class="article-wrapper">
+            <div class="article-inner">
+                <div class="article-container">
+                    <div class="article-box">
+                        <div class="article-content">
+                            <div class="article-body">
+                                <img src="https://picsum.photos/800/600?random=1">
+                                <div class="article-text-wrapper">
+                                    <div class="article-title-wrapper">
+                                        <h4>ტექნოლოგიები 2024</h4>
+                                    </div>
+                                    <div class="article-desc-wrapper">
+                                        <p>ტექნოლოგიური სიახლეების მიმოხილვა წელს...</p>
+                                    </div>
+                                    <!-- PROBLEM: link with no text and no aria-label -->
+                                    <a href="#"><img src="https://picsum.photos/20/20?random=10"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-wrapper">
+            <div class="article-inner">
+                <div class="article-container">
+                    <div class="article-box">
+                        <div class="article-content">
+                            <div class="article-body">
+                                <img src="https://picsum.photos/800/600?random=2">
+                                <div class="article-text-wrapper">
+                                    <div class="article-title-wrapper">
+                                        <h4>სპორტი</h4>
+                                    </div>
+                                    <div class="article-desc-wrapper">
+                                        <p>საქართველოს ნაკრები ევროპის ჩემპიონატზე...</p>
+                                    </div>
+                                    <a href="#">დააჭირეთ აქ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-wrapper">
+            <div class="article-inner">
+                <div class="article-container">
+                    <div class="article-box">
+                        <div class="article-content">
+                            <div class="article-body">
+                                <img src="https://picsum.photos/800/600?random=3">
+                                <div class="article-text-wrapper">
+                                    <div class="article-title-wrapper">
+                                        <h4>კულტურა</h4>
+                                    </div>
+                                    <div class="article-desc-wrapper">
+                                        <p>ახალი ფილმის პრემიერა თბილისში...</p>
+                                    </div>
+                                    <a href="#">დააჭირეთ აქ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-wrapper">
+            <div class="article-inner">
+                <div class="article-container">
+                    <div class="article-box">
+                        <div class="article-content">
+                            <div class="article-body">
+                                <img src="https://picsum.photos/800/600?random=4">
+                                <div class="article-text-wrapper">
+                                    <div class="article-title-wrapper">
+                                        <h4>ეკონომიკა</h4>
+                                    </div>
+                                    <div class="article-desc-wrapper">
+                                        <p>ლარის კურსი და ეკონომიკური პროგნოზი...</p>
+                                    </div>
+                                    <a href="#">დააჭირეთ აქ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="newsletter">
+        <h4>გამოიწერეთ სიახლეები</h4>
+        <!-- PROBLEM: form inputs without labels (Accessibility) -->
+        <!-- PROBLEM: no form element wrapping inputs -->
+        <input type="text" placeholder="სახელი">
+        <input type="email" placeholder="ელ. ფოსტა">
+        <!-- PROBLEM: button without accessible name -->
+        <button></button>
+    </div>
+
+    <div class="comments">
+        <h4>კომენტარები</h4>
+        <!-- PROBLEM: generating excessive DOM elements with JS (see script.js) -->
+        <div id="comments-container"></div>
+    </div>
+
+    <div class="footer">
+        <!-- PROBLEM: no <footer> semantic element -->
+        <p class="low-contrast-footer">GeorgiaNews 2024. ყველა უფლება დაცულია.</p>
+        <!-- PROBLEM: link opens new tab without rel="noopener" -->
+        <a href="https://example.com" target="_blank">Facebook</a>
+        <a href="https://example.com" target="_blank">Instagram</a>
+    </div>
+
+    <!-- PROBLEM: document.write usage (Best Practices) -->
+    <script>
+        document.write('<div class="injected">loaded</div>');
+    </script>
+</body>
+</html>

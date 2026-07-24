@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGeorgia — აღმოაჩინე საქართველო</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700&display=block" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="hero-header">
+        <div class="hero-overlay">
+            <h1 class="animated-title">TravelGeorgia</h1>
+            <p class="hero-subtitle">აღმოაჩინე საქართველოს სილამაზე</p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1565008576549-57569a49371d?w=4000" class="hero-image">
+    </header>
+
+    <nav class="main-nav">
+        <a href="#destinations">მიმართულებები</a>
+        <a href="#gallery">გალერეა</a>
+        <a href="#reviews">შეფასებები</a>
+        <a href="#booking">დაჯავშნა</a>
+    </nav>
+
+    <section id="destinations" class="destinations">
+        <h2><i class="fas fa-map-marker-alt"></i> პოპულარული მიმართულებები</h2>
+        <div class="search-box">
+            <input type="text" id="destination-search" placeholder="მოძებნე მიმართულება...">
+        </div>
+        <div id="destination-count"></div>
+        <div id="destination-cards" class="cards-grid"></div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <h2><i class="fas fa-camera"></i> ფოტო გალერეა</h2>
+        <div class="gallery-grid">
+            <img src="https://images.unsplash.com/photo-1565008576549-57569a49371d?w=3500">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=3500">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=3500">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=3500">
+            <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=3500">
+            <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=3500">
+            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=3500">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=3500">
+            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=3500">
+            <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=3500">
+            <img src="https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=3500">
+            <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=3500">
+        </div>
+    </section>
+
+    <div id="promo-container"></div>
+
+    <section id="reviews" class="reviews">
+        <h2><i class="fas fa-star"></i> მოგზაურთა შეფასებები</h2>
+        <div id="reviews-container"></div>
+    </section>
+
+    <section id="booking" class="booking">
+        <h2>დაჯავშნე ტური</h2>
+        <div class="booking-form">
+            <input type="text" placeholder="სახელი და გვარი">
+            <input type="email" placeholder="ელ. ფოსტა">
+            <input type="date">
+            <select id="destination-select">
+                <option value="">აირჩიე მიმართულება</option>
+            </select>
+            <input type="number" placeholder="მგზავრების რაოდენობა" min="1" max="20">
+            <button id="book-btn">დაჯავშნე</button>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <h2>სტატისტიკა</h2>
+        <div id="stats-container"></div>
+    </section>
+
+    <div class="scroll-counter" id="scroll-counter">
+        სქროლი: <span id="scroll-value">0</span>px
+    </div>
+
+    <footer>
+        <p>TravelGeorgia &copy; 2024 — ყველა უფლება დაცულია</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

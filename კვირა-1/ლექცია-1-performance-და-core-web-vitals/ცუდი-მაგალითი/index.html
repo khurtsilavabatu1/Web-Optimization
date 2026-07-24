@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ცუდი მაგალითი — Web Performance</title>
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #1: RENDER-BLOCKING CSS
+        ==========================================
+        ეს CSS ფაილები ბლოკავენ რენდერინგს.
+        ბრაუზერი ვერ დახატავს გვერდს სანამ ყველა CSS არ ჩამოიტვირთება.
+        animate.css = ~80KB ზედმეტი CSS რომელიც არ გვჭირდება
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #2: RENDER-BLOCKING JAVASCRIPT
+        ==========================================
+        ეს script-ები ბლოკავენ HTML-ის parsing-ს.
+        defer ან async ატრიბუტი არ აქვთ!
+        lodash = ~70KB, moment = ~300KB — მთლიანი ბიბლიოთეკები
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #3: LATE-LOADING FONT (CLS!)
+        ==========================================
+        Google Fonts font-display:swap-ის გარეშე.
+        ჯერ system font ჩანს, მერე custom font ჩაიტვირთება
+        და ტექსტის ზომა/spacing იცვლება = layout shift!
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;700&display=block" rel="stylesheet">
+
+</head>
+<body>
+    <!--
+        ==========================================
+        ❌ პრობლემა #4: არ არის PRECONNECT
+        ==========================================
+        ბრაუზერი ყოველ ახალ domain-ზე DNS lookup + TCP + TLS აკეთებს
+        preconnect-ის გარეშე ეს ყველა სურათის/რესურსის ჩატვირთვას აგვიანებს
+    -->
+
+    <header>
+        <h1 class="animate__animated animate__bounceIn">პროდუქტების კატალოგი</h1>
+        <p>ეს არის ცუდი მაგალითი — Web Performance პრობლემებით</p>
+    </header>
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #5: IMAGES WITHOUT DIMENSIONS (CLS!)
+        ==========================================
+        სურათებს არ აქვთ width/height ატრიბუტები.
+        ბრაუზერმა არ იცის რამდენი ადგილი დაუთმოს სანამ ჩაიტვირთება.
+        როცა ჩაიტვირთება — კონტენტი „გადახტება" ქვემოთ = layout shift!
+    -->
+    <!--
+        ==========================================
+        ❌ პრობლემა #6: NO LAZY LOADING
+        ==========================================
+        ყველა 10 სურათი ერთდროულად იტვირთება, viewport-ში არიან თუ არა.
+        loading="lazy" ატრიბუტი არ აქვთ.
+        ეს ზრდის page size-ს და ანელებს LCP-ს.
+    -->
+    <!--
+        ==========================================
+        ❌ პრობლემა #7: HUGE IMAGES (PAGE SIZE!)
+        ==========================================
+        w=3000 — თითოეული სურათი ~1-3MB!
+        ეკრანზე 300px სიგანით ჩანს, მაგრამ 3000px-იან სურათს ტვირთავს.
+        page size = 10 × 2MB = ~20MB! (ლიმიტი 500KB იყო)
+    -->
+    <section class="gallery">
+        <h2><i class="fas fa-images"></i> გალერეა</h2>
+        <div class="gallery-grid">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=3000" alt="Mountain">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=3000" alt="Nature">
+            <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=3000" alt="Forest">
+            <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=3000" alt="Waterfall">
+            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=3000" alt="Fog">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=3000" alt="Trees">
+            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=3000" alt="Field">
+            <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=3000" alt="Flowers">
+            <img src="https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=3000" alt="Lake">
+            <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=3000" alt="Valley">
+        </div>
+    </section>
+
+    <section class="products">
+        <h2><i class="fas fa-box"></i> პროდუქტები</h2>
+        <input type="text" id="search" placeholder="ძებნა პროდუქტებში...">
+        <div id="product-count"></div>
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>სახელი</th>
+                    <th>ფასი</th>
+                    <th>თარიღი</th>
+                    <th>კატეგორია</th>
+                </tr>
+            </thead>
+            <tbody id="product-body">
+            </tbody>
+        </table>
+    </section>
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #8: DYNAMICALLY INJECTED CONTENT (CLS!)
+        ==========================================
+        JavaScript-ით ჩასმული ბანერი ადგილის დაჯავშნის გარეშე.
+        როცა ჩაისმება, ქვემოთ მყოფი კონტენტი გადაინაცვლებს = layout shift!
+    -->
+    <div id="banner-container"></div>
+
+    <section class="stats">
+        <h2>სტატისტიკა</h2>
+        <div id="stats-content"></div>
+    </section>
+
+    <footer>
+        <p>ცუდი მაგალითი — Web Optimization კურსი</p>
+    </footer>
+
+    <!--
+        ==========================================
+        ❌ პრობლემა #9: SCRIPT defer-ის გარეშე
+        ==========================================
+        body-ის ბოლოშია, ამიტომ rendering-ს არ ბლოკავს.
+        მაგრამ defer-ის გარეშე ჩამოტვირთვა იწყება მხოლოდ
+        როცა ბრაუზერი ამ ხაზამდე მიაღწევს.
+        defer-ით head-ში რომ იყოს — ჩამოტვირთვა HTML parsing-თან
+        პარალელურად დაიწყებოდა = უფრო სწრაფი.
+    -->
+    <script src="script.js"></script>
+</body>
+</html>

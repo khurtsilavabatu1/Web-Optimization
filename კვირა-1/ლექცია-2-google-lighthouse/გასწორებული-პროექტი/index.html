@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="GeorgiaNews — საქართველოს სიახლეები, ტექნოლოგიები, სპორტი, კულტურა და ეკონომიკა">
+    <title>GeorgiaNews — საქართველოს სიახლეები</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333; line-height: 1.6; }
+        .skip-link { position: absolute; top: -100%; left: 0; background: #1a1a2e; color: white; padding: 10px 20px; z-index: 100; }
+        .skip-link:focus { top: 0; }
+        header { background: #1a1a2e; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: bold; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; }
+        .hero { position: relative; }
+        .hero img { width: 100%; height: auto; display: block; }
+        .hero-text { position: absolute; bottom: 20px; left: 20px; }
+        .hero-text p { color: #fff; background: rgba(0,0,0,0.7); padding: 10px 20px; font-size: 24px; }
+        h1 { padding: 20px; font-size: 28px; }
+    </style>
+
+    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+
+    <link rel="preload" as="image" href="https://picsum.photos/824/463" fetchpriority="high">
+
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">გადავიდე მთავარ კონტენტზე</a>
+
+    <header>
+        <div class="logo">GeorgiaNews</div>
+        <nav aria-label="მთავარი ნავიგაცია">
+            <a href="#">მთავარი</a>
+            <a href="#">სიახლეები</a>
+            <a href="#">კონტაქტი</a>
+            <a href="#">ჩვენს შესახებ</a>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section class="hero">
+            <img src="https://picsum.photos/824/463"
+                 alt="საქართველოს მთების პანორამული ხედი"
+                 width="824"
+                 height="463"
+                 fetchpriority="high">
+            <div class="hero-text">
+                <p>ბოლო სიახლეები საქართველოდან</p>
+            </div>
+        </section>
+
+        <h1>პოპულარული სტატიები</h1>
+
+        <section class="articles">
+            <article class="article-card">
+                <img src="https://picsum.photos/560/420?random=1"
+                     alt="ტექნოლოგიური მოწყობილობები მაგიდაზე"
+                     width="560"
+                     height="420"
+                     loading="lazy">
+                <h2>ტექნოლოგიები 2024</h2>
+                <p>ტექნოლოგიური სიახლეების მიმოხილვა წელს...</p>
+                <a href="#">სრულად წაკითხვა — ტექნოლოგიები</a>
+            </article>
+
+            <article class="article-card">
+                <img src="https://picsum.photos/560/420?random=2"
+                     alt="ფეხბურთის მატჩი სტადიონზე"
+                     width="560"
+                     height="420"
+                     loading="lazy">
+                <h2>სპორტი</h2>
+                <p>საქართველოს ნაკრები ევროპის ჩემპიონატზე...</p>
+                <a href="#">სრულად წაკითხვა — სპორტი</a>
+            </article>
+
+            <article class="article-card">
+                <img src="https://picsum.photos/560/420?random=3"
+                     alt="კინოთეატრის დარბაზი პრემიერაზე"
+                     width="560"
+                     height="420"
+                     loading="lazy">
+                <h2>კულტურა</h2>
+                <p>ახალი ფილმის პრემიერა თბილისში...</p>
+                <a href="#">სრულად წაკითხვა — კულტურა</a>
+            </article>
+
+            <article class="article-card">
+                <img src="https://picsum.photos/560/420?random=4"
+                     alt="ლარის ბანკნოტები და გრაფიკი"
+                     width="560"
+                     height="420"
+                     loading="lazy">
+                <h2>ეკონომიკა</h2>
+                <p>ლარის კურსი და ეკონომიკური პროგნოზი...</p>
+                <a href="#">სრულად წაკითხვა — ეკონომიკა</a>
+            </article>
+        </section>
+
+        <section class="newsletter">
+            <h2>გამოიწერეთ სიახლეები</h2>
+            <form>
+                <label for="name">სახელი</label>
+                <input type="text" id="name" placeholder="სახელი">
+                <label for="email">ელ. ფოსტა</label>
+                <input type="email" id="email" placeholder="ელ. ფოსტა">
+                <button type="submit">გამოწერა</button>
+            </form>
+        </section>
+
+        <section class="comments">
+            <h2>კომენტარები</h2>
+            <div id="comments-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>GeorgiaNews 2024. ყველა უფლება დაცულია.</p>
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+    </footer>
+</body>
+</html>
