@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Tab პრაქტიკა — DevTools ლაბორატორია</title>
+
+    <!--
+        ============================================================
+        🧪 DevTools Performance Tab — პრაქტიკის პროექტი
+        ============================================================
+
+        ეს პროექტი შექმნილია სპეციალურად იმისთვის, რომ Performance Tab-ში
+        ნათლად დაინახო ყველა სექცია:
+
+        📊 რას დაინახავ Performance Tab-ში:
+        ──────────────────────────────────
+        1. FPS ზოლი — scroll-ის დროს წითელი frame drop-ები
+        2. CPU ზოლი — ყვითელი JS პიკები Long Task-ების დროს
+        3. Main Thread — ფუნქციების სახელები (heavySort, animateBoxes...)
+        4. Long Tasks — 50ms+ ტასკები წითელი კუთხით
+        5. Layout/Paint — იასამნისფერი და მწვანე ზოლები
+
+        📋 ინსტრუქცია:
+        ──────────────
+        1. გახსენი ეს ფაილი ბრაუზერში
+        2. გახსენი DevTools → Performance tab
+        3. დააჭირე Record (⏺ ან Cmd+E)
+        4. 10 წამი დაელოდე + დასქროლე ზემოთ-ქვემოთ
+        5. შეაჩერე Recording
+        6. გაანალიზე შედეგები (იხ. ქვემოთ კომენტარებში)
+
+        📋 რა უნდა ნახო Bottom-Up tab-ში:
+        ──────────────────────────────────
+        - heavySort() — ყველაზე დიდი Self Time
+        - blockingLoop() — მძიმე გამოთვლა
+        - animateBoxes() — scroll-ზე ბევრი layout/paint
+        - generateCards() — DOM manipulation
+
+        📋 რა უნდა ნახო Call Tree tab-ში:
+        ──────────────────────────────────
+        - Evaluate script → heavySort() → (მძიმე სორტირება)
+        - Event: scroll → onScrollHandler() → animateBoxes() → forceReflow()
+        - Timer Fired → blockingLoop()
+
+        📋 Coverage Tab-ის ინსტრუქცია:
+        ──────────────────────────────
+        1. Cmd+Shift+P → "Coverage" → Start instrumenting coverage
+        2. ნახე unused-library.js — 90%+ წითელი (გამოუყენებელი!)
+        3. ნახე styles.css — ბევრი გამოუყენებელი CSS
+        4. დასკვნა: unused-library.js-ს code splitting ან წაშლა სჭირდება
+
+        📋 Network Tab — Disable Cache:
+        ────────────────────────────────
+        1. გახსენი Network tab
+        2. მონიშნე "Disable cache" checkbox
+        3. გადატვირთე გვერდი (Cmd+R)
+        4. ნახე ყველა ფაილის ჩატვირთვის დრო
+        5. მოხსენი "Disable cache" და ისევ გადატვირთე
+        6. შეადარე — cache-ით ბევრად სწრაფია!
+    -->
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!--
+        ❌ RENDER-BLOCKING SCRIPT — defer-ის გარეშე
+        Performance tab-ში დაინახავ: Evaluate script → heavySort()
+        ეს ბლოკავს გვერდის ჩვენებას!
+    -->
+    <script src="heavy-script.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>DevTools Performance Lab</h1>
+        <p>ეს გვერდი სპეციალურად შეიცავს performance პრობლემებს — გახსენი Performance Tab და დააკვირდი!</p>
+        <div class="controls">
+            <button id="btn-heavy" onclick="runHeavyTask()">
+                🔴 გაუშვი Long Task (Main Thread ბლოკი)
+            </button>
+            <button id="btn-sort" onclick="runHeavySort()">
+                🟡 გაუშვი მძიმე სორტირება (500ms+)
+            </button>
+            <button id="btn-dom" onclick="addManyElements()">
+                🟣 დაამატე 2000 DOM ელემენტი
+            </button>
+            <button id="btn-reflow" onclick="triggerReflowStorm()">
+                🟢 Layout Thrashing (ბევრი reflow)
+            </button>
+        </div>
+        <p class="hint">
+            💡 ინსტრუქცია: ჩართე Performance Recording → დააჭირე ღილაკებს → შეაჩერე Recording → ნახე შედეგი
+        </p>
+    </header>
+
+    <!--
+        📊 FPS მონიტორი
+        ──────────────
+        ეს აჩვენებს FPS-ს რეალურ დროში გვერდზე.
+        Performance tab-ში იგივე FPS ზოლში დაინახავ.
+    -->
+    <div id="fps-counter">FPS: --</div>
+
+    <!--
+        🔴 სექცია 1: SCROLL-ზე FRAME DROP
+        ──────────────────────────────────
+        Performance tab-ში დაინახავ:
+        - FPS ზოლი: წითელი ადგილები scroll-ის დროს
+        - Main Thread: "Event: scroll" → animateBoxes() → forceReflow()
+        - CPU ზოლი: ყვითელი პიკები scroll-ის დროს
+    -->
+    <section class="scroll-section">
+        <h2>სექცია 1: Scroll Performance (FPS Drop)</h2>
+        <p>დასქროლე ქვემოთ — FPS მონიტორი დაეცემა, Performance tab-ში წითელი FPS ზოლი დაინახავ</p>
+        <div id="scroll-boxes" class="scroll-boxes-container">
+            <!-- JavaScript-ით შეივსება -->
+        </div>
+    </section>
+
+    <!--
+        🟡 სექცია 2: LONG TASKS
+        ────────────────────────
+        Performance tab-ში დაინახავ:
+        - Main Thread: გრძელი ყვითელი ზოლები წითელი კუთხით (Long Tasks)
+        - Bottom-Up: heavySort() და blockingLoop() ყველაზე მეტი Self Time-ით
+        - Call Tree: Timer Fired → blockingLoop() → (ციკლი)
+    -->
+    <section class="longtask-section">
+        <h2>სექცია 2: Long Tasks (Main Thread Blocking)</h2>
+        <p>ღილაკზე დაჭერისას Main Thread "გაიყინება" — ვერც სქროლი, ვერც კლიკი</p>
+        <div id="task-result" class="result-box">შედეგი აქ გამოჩნდება...</div>
+        <div id="animation-box" class="animation-box">
+            ეს ყუთი ანიმაციას აკეთებს. Long Task-ის დროს გაჩერდება!
+        </div>
+    </section>
+
+    <!--
+        🟣 სექცია 3: DOM MANIPULATION
+        ──────────────────────────────
+        Performance tab-ში დაინახავ:
+        - Main Thread: addManyElements() → ბევრი DOM node-ის შექმნა
+        - იასამნისფერი ზოლები (Layout) — ბრაუზერი ხელახლა ითვლის layout-ს
+        - მწვანე ზოლები (Paint) — ბრაუზერი ხელახლა ხატავს
+    -->
+    <section class="dom-section">
+        <h2>სექცია 3: DOM Manipulation</h2>
+        <p>"DOM ელემენტების დამატება" ღილაკი 2000 ელემენტს შექმნის</p>
+        <div id="dom-container" class="dom-container"></div>
+    </section>
+
+    <!--
+        🟢 სექცია 4: LAYOUT THRASHING
+        ──────────────────────────────
+        Performance tab-ში დაინახავ:
+        - იასამნისფერი "Layout" ზოლები (forced reflow)
+        - Warning: "Forced reflow is a likely performance bottleneck"
+        - Main Thread: triggerReflowStorm() → getComputedStyle/offsetHeight
+    -->
+    <section class="reflow-section">
+        <h2>სექცია 4: Layout Thrashing</h2>
+        <p>ეს ღილაკი იწვევს "Layout Thrashing" — ბრაუზერი იძულებულია ბევრჯერ გადათვალოს ელემენტების პოზიციები</p>
+        <div id="reflow-boxes" class="reflow-boxes">
+            <div class="reflow-box">1</div>
+            <div class="reflow-box">2</div>
+            <div class="reflow-box">3</div>
+            <div class="reflow-box">4</div>
+            <div class="reflow-box">5</div>
+            <div class="reflow-box">6</div>
+            <div class="reflow-box">7</div>
+            <div class="reflow-box">8</div>
+            <div class="reflow-box">9</div>
+            <div class="reflow-box">10</div>
+            <div class="reflow-box">11</div>
+            <div class="reflow-box">12</div>
+            <div class="reflow-box">13</div>
+            <div class="reflow-box">14</div>
+            <div class="reflow-box">15</div>
+            <div class="reflow-box">16</div>
+            <div class="reflow-box">17</div>
+            <div class="reflow-box">18</div>
+            <div class="reflow-box">19</div>
+            <div class="reflow-box">20</div>
+        </div>
+    </section>
+
+    <!-- სექცია 5: ბევრი კონტენტი (სქროლისთვის) -->
+    <section class="content-section">
+        <h2>სექცია 5: კონტენტი (სქროლის ტესტისთვის)</h2>
+        <div id="cards-container" class="cards-container">
+            <!-- JavaScript-ით შეივსება -->
+        </div>
+    </section>
+
+    <footer>
+        <p>Web Optimization — ლექცია 4: DevTools Performance Tab პრაქტიკა</p>
+    </footer>
+
+    <!--
+        ❌ გამოუყენებელი ბიბლიოთეკა — Coverage Tab-ში წითლად ჩანს!
+        ──────────────────────────────────────────────────────────────
+        ეს ფაილი 90%+ გამოუყენებელია. Coverage tab-ით ნახე:
+        1. Cmd+Shift+P → "Coverage" → Start
+        2. unused-library.js — თითქმის მთლიანად წითელი
+        3. დასკვნა: ეს ბიბლიოთეკა წასაშლელია ან code splitting-ით ცალკე chunk-ად
+    -->
+    <script src="unused-library.js"></script>
+
+    <!--
+        მთავარი სკრიპტი — Performance Tab-ში ყველა ფუნქცია ნათლად ჩანს
+    -->
+    <script src="app.js"></script>
+</body>
+</html>

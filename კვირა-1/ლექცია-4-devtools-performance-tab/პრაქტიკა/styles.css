@@ -1,0 +1,489 @@
+/*
+    ============================================================
+    Performance Lab — სტილები
+    ============================================================
+    Coverage Tab-ში ნახე:
+    - ქვემოთ არის ბევრი გამოუყენებელი CSS (წითლად ჩანს)
+    - ეს გვეხმარება code splitting-ის გადაწყვეტილების მიღებაში
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 3px solid #e94560;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #e94560;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: #aaa;
+    max-width: 700px;
+    margin: 0 auto 1rem;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+}
+
+.controls button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.controls button:nth-child(1) {
+    background: #e94560;
+    color: white;
+}
+
+.controls button:nth-child(2) {
+    background: #f59e0b;
+    color: #1a1a2e;
+}
+
+.controls button:nth-child(3) {
+    background: #8b5cf6;
+    color: white;
+}
+
+.controls button:nth-child(4) {
+    background: #10b981;
+    color: white;
+}
+
+.hint {
+    background: rgba(233, 69, 96, 0.1);
+    border: 1px solid #e94560;
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+}
+
+/* FPS Counter */
+#fps-counter {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #10b981;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 1000;
+    border: 2px solid #10b981;
+}
+
+/* Sections */
+section {
+    padding: 2rem;
+    margin: 1rem 0;
+    border-bottom: 1px solid #333;
+}
+
+section h2 {
+    color: #e94560;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+section p {
+    color: #999;
+    margin-bottom: 1rem;
+}
+
+/* Scroll Boxes */
+.scroll-boxes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.scroll-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.7rem;
+    color: white;
+    transition: none;
+}
+
+/* Result Box */
+.result-box {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-family: monospace;
+    min-height: 60px;
+}
+
+/* Animation Box */
+.animation-box {
+    width: 200px;
+    height: 80px;
+    background: linear-gradient(90deg, #e94560, #8b5cf6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* DOM Container */
+.dom-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.dom-item {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    font-size: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+}
+
+/* Reflow Boxes */
+.reflow-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.reflow-box {
+    width: 60px;
+    height: 60px;
+    background: #10b981;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s;
+}
+
+/* Cards */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    border-color: #e94560;
+}
+
+.card h3 {
+    color: #e94560;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.card .price {
+    font-size: 1.2rem;
+    color: #10b981;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+footer {
+    background: #1a1a2e;
+    padding: 2rem;
+    text-align: center;
+    color: #666;
+    border-top: 1px solid #333;
+}
+
+/* ============================================================
+   ❌ გამოუყენებელი CSS — Coverage Tab-ში წითლად ჩანს!
+   ============================================================
+   ეს სტილები არსად გამოიყენება გვერდზე.
+   Coverage tab-ში ეს ხაზები წითელი იქნება.
+   ეს ნიშნავს რომ ეს CSS წასაშლელია — ტყუილად იტვირთება.
+*/
+
+.unused-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+}
+
+.unused-modal-content {
+    background: #2a2a3e;
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 500px;
+    position: relative;
+}
+
+.unused-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #e94560;
+}
+
+.unused-sidebar {
+    position: fixed;
+    left: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: #16213e;
+    transition: left 0.3s;
+    z-index: 999;
+    padding: 2rem;
+}
+
+.unused-sidebar.active {
+    left: 0;
+}
+
+.unused-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+}
+
+.unused-tooltip {
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.unused-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: #333;
+}
+
+.unused-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.unused-carousel-track {
+    display: flex;
+    transition: transform 0.5s;
+}
+
+.unused-carousel-slide {
+    min-width: 100%;
+    padding: 2rem;
+}
+
+.unused-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.unused-carousel-btn.prev { left: 10px; }
+.unused-carousel-btn.next { right: 10px; }
+
+.unused-accordion {
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.unused-accordion-item {
+    border-bottom: 1px solid #333;
+}
+
+.unused-accordion-header {
+    padding: 1rem;
+    cursor: pointer;
+    background: #1a1a2e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.unused-accordion-content {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s, padding 0.3s;
+}
+
+.unused-accordion-content.active {
+    max-height: 500px;
+    padding: 1rem;
+}
+
+.unused-tabs {
+    display: flex;
+    border-bottom: 2px solid #333;
+}
+
+.unused-tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.unused-tab.active {
+    border-bottom-color: #e94560;
+    color: #e94560;
+}
+
+.unused-tab-content {
+    display: none;
+    padding: 1rem;
+}
+
+.unused-tab-content.active {
+    display: block;
+}
+
+.unused-notification {
+    position: fixed;
+    top: 20px;
+    right: -400px;
+    width: 350px;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #10b981;
+    color: white;
+    transition: right 0.3s;
+    z-index: 1001;
+}
+
+.unused-notification.show {
+    right: 20px;
+}
+
+.unused-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.unused-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: #2a2a3e;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+.unused-dropdown:hover .unused-dropdown-content {
+    display: block;
+}
+
+.unused-dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.unused-dropdown-item:hover {
+    background: #333;
+}
