@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.page-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}

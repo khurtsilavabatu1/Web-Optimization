@@ -1,0 +1,14 @@
+{
+  "name": "demo-image-font-optimization",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "npx serve -l 3000"
+  },
+  "dependencies": {
+    "sharp": "^0.33.0",
+    "serve": "^14.2.0"
+  }
+}
