@@ -1,0 +1,85 @@
+.nesting-demo {
+  padding: 40px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.nesting-card {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 32px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.nesting-card:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+}
+
+.nesting-card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.nesting-card p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.nesting-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nesting-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  transform: scale(1.05);
+}
+
+.code-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.code-comparison .explanation-item {
+  padding: 16px;
+}
+
+.code-comparison pre {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.code-comparison code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+@media (max-width: 768px) {
+  .code-comparison {
+    grid-template-columns: 1fr;
+  }
+}

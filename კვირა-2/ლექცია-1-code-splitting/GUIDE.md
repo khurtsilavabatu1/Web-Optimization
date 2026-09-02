@@ -74,13 +74,11 @@ dist/assets/index-XXXXX.js   184.37 kB │ gzip: 59.94 kB
 
 ### გვჭირდება, თუ:
 
-| ნიშანი | როგორ ვამოწმებთ |
-|--------|----------------|
-| Coverage-ში JS-ის 40%+ გამოუყენებელია | Coverage Tab |
-| Bundle ზომა 200KB+ (gzip-მდე) | `npm run build` |
-| აპლიკაციას 3+ გვერდი/route აქვს | კოდის სტრუქტურა |
-| მძიმე კომპონენტები მხოლოდ ზოგ გვერდზეა საჭირო | Coverage Tab / კოდის ანალიზი |
-| Lighthouse ამბობს "Remove unused JavaScript" | Lighthouse Opportunities |
+- **Coverage-ში JS-ის 40%+ გამოუყენებელია** — როგორ ვამოწმებთ: Coverage Tab
+- **Bundle ზომა 200KB+ (gzip-მდე)** — როგორ ვამოწმებთ: `npm run build`
+- **აპლიკაციას 3+ გვერდი/route აქვს** — როგორ ვამოწმებთ: კოდის სტრუქტურა
+- **მძიმე კომპონენტები მხოლოდ ზოგ გვერდზეა საჭირო** — როგორ ვამოწმებთ: Coverage Tab / კოდის ანალიზი
+- **Lighthouse ამბობს "Remove unused JavaScript"** — როგორ ვამოწმებთ: Lighthouse Opportunities
 
 ### არ გვჭირდება, თუ:
 
@@ -200,12 +198,21 @@ dist/assets/index-XXXXX.js       167.71 kB   (მთავარი — React + 
 
 ### 5.2 შედარების ცხრილი
 
-| | Without Splitting | With Splitting |
-|---|---|---|
-| **JS ფაილების რაოდენობა** | 1 | 7 |
-| **Home-ზე ჩასატვირთი JS** | 184 KB | 168 KB (მთავარი + Home chunk) |
-| **Dashboard-ის კოდი Home-ზე** | ჩატვირთულია | არ არის ჩატვირთული |
-| **HeavyChart Dashboard-ზე** | ყოველთვის ჩატვირთული | მხოლოდ ღილაკზე click-ით |
+**JS ფაილების რაოდენობა**
+- Without Splitting: 1
+- With Splitting: 7
+
+**Home-ზე ჩასატვირთი JS**
+- Without Splitting: 184 KB
+- With Splitting: 168 KB (მთავარი + Home chunk)
+
+**Dashboard-ის კოდი Home-ზე**
+- Without Splitting: ჩატვირთულია
+- With Splitting: არ არის ჩატვირთული
+
+**HeavyChart Dashboard-ზე**
+- Without Splitting: ყოველთვის ჩატვირთული
+- With Splitting: მხოლოდ ღილაკზე click-ით
 
 ### 5.3 Coverage Tab-ით შედარება
 

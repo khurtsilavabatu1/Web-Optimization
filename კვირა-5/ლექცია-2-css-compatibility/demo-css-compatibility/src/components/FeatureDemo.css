@@ -1,0 +1,96 @@
+.feature-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 16px;
+  padding: 28px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.feature-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 8px;
+}
+
+.feature-description {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.feature-comparison {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.comparison-item {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.comparison-item.modern {
+  border: 2px solid #60a5fa;
+}
+
+.comparison-item.fallback {
+  border: 2px solid #fbbf24;
+}
+
+.comparison-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.comparison-item.modern .comparison-label {
+  color: #60a5fa;
+}
+
+.comparison-item.fallback .comparison-label {
+  color: #fbbf24;
+}
+
+.comparison-code {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+  word-break: break-word;
+}
+
+.comparison-arrow {
+  font-size: 1.5rem;
+  color: #64748b;
+  font-weight: bold;
+}
+
+@media (max-width: 640px) {
+  .comparison-arrow {
+    display: none;
+  }
+
+  .feature-comparison {
+    flex-direction: column;
+  }
+
+  .comparison-item {
+    width: 100%;
+  }
+}

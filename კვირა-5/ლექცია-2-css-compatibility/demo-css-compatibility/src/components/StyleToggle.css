@@ -1,0 +1,65 @@
+.style-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.toggle-btn {
+  padding: 10px 20px;
+  background: transparent;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  border-radius: 8px;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  border-color: transparent;
+  color: white;
+}
+
+.toggle-switch {
+  width: 60px;
+  height: 32px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-switch:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 4px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  border-radius: 12px;
+  transition: left 0.3s;
+}
+
+.toggle-slider.fallback {
+  left: 4px;
+}
+
+.toggle-slider.modern {
+  left: 32px;
+}

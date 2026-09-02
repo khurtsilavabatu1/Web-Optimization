@@ -1,0 +1,249 @@
+/* ==============================================
+   fallback.css
+   Fallback styles for older browsers
+   ============================================== */
+
+/* Traditional viewport units */
+.hero {
+  min-height: 100vh; /* Fallback for older browsers */
+  min-height: calc(100vh - 60px); /* Account for browser chrome */
+}
+
+/* Media queries instead of container queries */
+.container-demo.fallback .demo-card {
+  display: block;
+  text-align: center;
+}
+
+@media (min-width: 500px) {
+  .container-demo.fallback .demo-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    text-align: left;
+    gap: 20px;
+  }
+
+  .container-demo.fallback .demo-card-icon {
+    grid-row: 1 / 3;
+    font-size: 4rem;
+  }
+}
+
+/* Flat selectors instead of nesting */
+.nesting-demo.fallback .nesting-card {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.nesting-demo.fallback .nesting-card:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.4);
+}
+
+.nesting-demo.fallback .nesting-card h4 {
+  color: white;
+}
+
+.nesting-demo.fallback .nesting-card h4::after {
+  content: " (Fallback)";
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+
+.nesting-demo.fallback .nesting-card .nesting-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #fde047;
+  color: #fde047;
+}
+
+/* JavaScript-based alternative to :has() */
+.support-item {
+  padding-left: 20px;
+}
+
+.feature-card {
+  border-left: 4px solid transparent;
+}
+
+.feature-card.has-code {
+  border-left-color: #60a5fa;
+}
+
+/* Manual styling instead of :has() */
+.demo-block .modern {
+  /* Parent needs to be styled via JavaScript or separate class */
+}
+
+.demo-block.modern-mode {
+  border: 2px solid #60a5fa;
+}
+
+.demo-block.fallback-mode {
+  border: 2px solid #fbbf24;
+}
+
+/* Manual line breaks instead of text-wrap: balance */
+.section-title,
+.demo-title,
+.feature-title {
+  max-width: 30ch; /* Approximate balance */
+}
+
+/* Precomputed colors instead of color-mix() */
+.style-toggle .toggle-btn.active {
+  background: #7c8ffa; /* Precomputed mix of #60a5fa and #a78bfa */
+  color: white;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #60a5fa 0%, #34d399 100%);
+}
+
+/* Traditional properties instead of logical */
+.feature-card {
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  margin-bottom: 24px;
+}
+
+/* WebKit scrollbar styling (Chrome/Safari) */
+.scrollable-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #60a5fa;
+  border-radius: 4px;
+}
+
+/* Firefox scrollbar */
+.scrollable-content {
+  scrollbar-width: thin;
+  scrollbar-color: #60a5fa #1e293b;
+}
+
+/* Fixed aspect ratio with padding hack */
+.color-box {
+  width: 120px;
+  height: 120px;
+}
+
+/* Precomputed rgba values instead of color-mix() */
+.support-item.supported {
+  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.support-item.not-supported {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Solid color fallback */
+.navbar {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* Vendor prefixed backdrop-filter */
+.navbar {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
+  .navbar {
+    background: rgba(15, 23, 42, 0.95);
+  }
+}
+
+/* Traditional media queries */
+@media (min-width: 768px) {
+  .feature-grid {
+    gap: 32px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .section {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* Traditional focus styles */
+*:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Manual emoji prefixes using JavaScript or static content */
+.demo-block.modern-mode .demo-title::before {
+  content: "🚀 ";
+}
+
+.demo-block.fallback-mode .demo-title::before {
+  content: "⚙️ ";
+}
+
+/* Flexbox gap fallback using margins */
+@supports not (gap: 1px) {
+  .nav-links {
+    gap: 0;
+  }
+
+  .nav-links li {
+    margin-left: 32px;
+  }
+
+  .nav-links li:first-child {
+    margin-left: 0;
+  }
+
+  .feature-grid {
+    gap: 0;
+    margin: -12px;
+  }
+
+  .feature-grid > * {
+    margin: 12px;
+  }
+}
+
+/* IE11 and older browser fixes */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* IE11 specific fixes */
+  .feature-grid {
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
+  }
+}
+
+/* Graceful degradation messages */
+.modern-only-warning {
+  display: none;
+  background: #fbbf24;
+  color: #78350f;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-weight: 600;
+}
+
+@supports not (container-type: inline-size) {
+  .modern-only-warning.container-warning {
+    display: block;
+  }
+}
+
+@supports not selector(:has(p)) {
+  .modern-only-warning.has-warning {
+    display: block;
+  }
+}

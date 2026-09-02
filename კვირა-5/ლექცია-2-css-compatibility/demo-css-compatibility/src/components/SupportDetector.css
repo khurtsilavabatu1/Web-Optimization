@@ -1,0 +1,143 @@
+.support-detector {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.support-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px solid rgba(148, 163, 184, 0.1);
+  transition: all 0.2s;
+}
+
+.support-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.support-item.supported {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.support-item.not-supported {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.support-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.support-item.supported .support-icon {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.support-item.not-supported .support-icon {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.support-info {
+  flex: 1;
+}
+
+.support-feature {
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.support-status {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.support-item.supported .support-status {
+  color: #4ade80;
+}
+
+.support-item.not-supported .support-status {
+  color: #f87171;
+}
+
+.support-summary {
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.support-summary h4 {
+  font-size: 1.2rem;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.support-summary p {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 16px;
+}
+
+.support-summary strong {
+  color: #60a5fa;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #60a5fa 0%, #34d399 100%);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.support-note {
+  padding: 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #60a5fa;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.support-note strong {
+  color: #60a5fa;
+}
+
+@media (max-width: 640px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+}

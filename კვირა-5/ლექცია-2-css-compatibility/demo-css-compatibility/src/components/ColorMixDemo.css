@@ -1,0 +1,76 @@
+.color-input {
+  margin-bottom: 16px;
+}
+
+.color-input label {
+  display: block;
+  margin-bottom: 8px;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.color-input input[type="color"] {
+  width: 60px;
+  height: 40px;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  background: none;
+  margin-right: 12px;
+}
+
+.color-input span {
+  color: #94a3b8;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.color-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 32px 0 24px;
+  flex-wrap: wrap;
+}
+
+.color-box {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.color-box span {
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+}
+
+.color-box.mixed {
+  border: 3px solid #60a5fa;
+  width: 140px;
+  height: 140px;
+}
+
+.color-mix-symbol {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .color-preview {
+    flex-direction: column;
+  }
+
+  .color-mix-symbol {
+    transform: rotate(90deg);
+  }
+}

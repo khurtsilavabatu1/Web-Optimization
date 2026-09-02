@@ -114,11 +114,9 @@ npm run build
 
 ### 1.5 ჩაინიშნეთ შედეგები
 
-| ვარიანტი | JS ზომა | Build დრო |
-|---|---|---|
-| `minify: false` | _____ kB | _____ ms |
-| `minify: 'esbuild'` | _____ kB | _____ ms |
-| `minify: 'terser'` | _____ kB | _____ ms |
+- **`minify: false`** — JS ზომა: _____ kB, Build დრო: _____ ms
+- **`minify: 'esbuild'`** — JS ზომა: _____ kB, Build დრო: _____ ms
+- **`minify: 'terser'`** — JS ზომა: _____ kB, Build დრო: _____ ms
 
 ---
 
@@ -211,11 +209,9 @@ npm run preview
 
 ### 2.4 ჩაინიშნეთ შედეგები
 
-| ვარიანტი | Sources tab | .map ფაილები dist/-ში | გამოყენება |
-|---|---|---|---|
-| `true` | ორიგინალი ჩანს | არის | Development, staging |
-| `false` | მხოლოდ bundle | არ არის | Production (კოდი დაცულია) |
-| `'hidden'` | მხოლოდ bundle | არის | Production + Sentry/error tracking |
+- **`true`** — Sources tab: ორიგინალი ჩანს, .map ფაილები dist/-ში: არის, გამოყენება: Development, staging
+- **`false`** — Sources tab: მხოლოდ bundle, .map ფაილები dist/-ში: არ არის, გამოყენება: Production (კოდი დაცულია)
+- **`'hidden'`** — Sources tab: მხოლოდ bundle, .map ფაილები dist/-ში: არის, გამოყენება: Production + Sentry/error tracking
 
 **დააბრუნეთ `sourcemap: true`** შემდეგი ეტაპისთვის.
 
@@ -268,12 +264,10 @@ ls -lh dist/assets/*.js dist/assets/*.gz dist/assets/*.br 2>/dev/null | head -9
 
 ### 3.3 ჩაინიშნეთ შედეგები
 
-| ეტაპი | JS ზომა | შემცირება |
-|---|---|---|
-| Original (minify: false) | _____ kB | — |
-| Minified (esbuild) | _____ kB | ___% ↓ |
-| + Gzip (.gz) | _____ kB | ___% ↓ |
-| + Brotli (.br) | _____ kB | ___% ↓ |
+- **Original (minify: false)** — JS ზომა: _____ kB
+- **Minified (esbuild)** — JS ზომა: _____ kB, შემცირება: ___% ↓
+- **+ Gzip (.gz)** — JS ზომა: _____ kB, შემცირება: ___% ↓
+- **+ Brotli (.br)** — JS ზომა: _____ kB, შემცირება: ___% ↓
 
 ### 3.4 Network tab-ში Compression-ის ნახვა
 

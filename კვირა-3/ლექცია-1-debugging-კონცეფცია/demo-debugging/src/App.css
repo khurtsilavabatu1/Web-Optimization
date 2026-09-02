@@ -1,0 +1,430 @@
+/* ===== Reset & Base Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+code {
+  font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* ===== Bug Banner ===== */
+.bug-banner {
+  background: linear-gradient(135deg, #d63031 0%, #e17055 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(214, 48, 49, 0.3);
+  text-align: center;
+}
+
+.bug-banner h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bug-banner p {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ===== Container Layout ===== */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 30px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== App Panel ===== */
+.app-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.task-manager h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ===== Input Group ===== */
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #6c5ce7;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-group button {
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+.input-group button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+}
+
+.input-group button:active {
+  transform: translateY(0);
+}
+
+/* ===== Filters ===== */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-btn.active {
+  background: rgba(108, 92, 231, 0.3);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===== Task List ===== */
+.task-list {
+  list-style: none;
+  margin-bottom: 20px;
+  min-height: 200px;
+}
+
+.task-item {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.task-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.task-item.completed {
+  opacity: 0.6;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.task-checkbox {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: #6c5ce7;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 1rem;
+  color: #ffffff;
+  word-break: break-word;
+}
+
+.task-time {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-right: 10px;
+}
+
+.task-note {
+  width: 130px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  outline: none;
+}
+
+.task-note::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.task-note:focus {
+  border-color: rgba(108, 92, 231, 0.6);
+}
+
+.delete-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background: rgba(214, 48, 49, 0.2);
+  color: #ff7675;
+  border: 1px solid rgba(214, 48, 49, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.delete-btn:hover {
+  background: rgba(214, 48, 49, 0.3);
+  border-color: rgba(214, 48, 49, 0.5);
+  color: #ffffff;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+/* ===== Task Footer ===== */
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.task-counter {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.clear-completed-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-completed-btn:hover {
+  background: rgba(214, 48, 49, 0.2);
+  color: #ff7675;
+  border-color: rgba(214, 48, 49, 0.4);
+}
+
+/* ===== Bug Panel ===== */
+.bug-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.bug-panel h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.bug-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ===== Bug Card ===== */
+.bug-card {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.bug-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bug-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.bug-number {
+  background: rgba(108, 92, 231, 0.3);
+  color: #a29bfe;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.bug-type {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bug-type.state {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff7675;
+}
+
+.bug-type.effect {
+  background: rgba(255, 184, 77, 0.2);
+  color: #ffa502;
+}
+
+.bug-type.closure {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+}
+
+.bug-type.key {
+  background: rgba(99, 179, 237, 0.2);
+  color: #63b3ed;
+}
+
+.bug-type.cleanup {
+  background: rgba(214, 158, 46, 0.2);
+  color: #d69e2e;
+}
+
+.bug-type.async {
+  background: rgba(159, 122, 234, 0.2);
+  color: #9f7aea;
+}
+
+.bug-hint {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bug-hint strong {
+  color: #ffffff;
+}
+
+/* ===== Scrollbar Styling ===== */
+.bug-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bug-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.bug-panel::-webkit-scrollbar-thumb {
+  background: rgba(108, 92, 231, 0.5);
+  border-radius: 10px;
+}
+
+.bug-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 92, 231, 0.7);
+}
+
+/* ===== Time Since Badge ===== */
+.time-since-badge {
+  background: rgba(108, 92, 231, 0.2);
+  color: #a29bfe;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 15px;
+  display: inline-block;
+  border: 1px solid rgba(108, 92, 231, 0.3);
+}

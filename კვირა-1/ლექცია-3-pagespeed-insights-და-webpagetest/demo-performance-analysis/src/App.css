@@ -1,0 +1,407 @@
+/*
+  ==========================================
+  TechStore — არაოპტიმიზირებული CSS
+  ==========================================
+
+  პრობლემები:
+  1. @import — დამატებითი render-blocking request
+  2. ბევრი გამოუყენებელი CSS (dead code)
+  3. არაეფექტური სელექტორები
+  4. მძიმე ანიმაციები (box-shadow changes)
+  5. არ არის responsive design
+  6. Low contrast ფერები
+  7. Continuous animations — wastes CPU
+*/
+
+/* PROBLEM: @import — ეს დამატებითი render-blocking request-ია */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=block');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Roboto Mono', sans-serif;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  background: #0a0a0a;
+  border-bottom: 1px solid #00ff88;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* PROBLEM: heavy animation */
+  animation: navSlideIn 2s ease-out;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@keyframes navSlideIn {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.logo-text {
+  font-size: 26px;
+  font-weight: 800;
+  color: #00ff88;
+  /* PROBLEM: continuous animation */
+  animation: logoPulse 3s infinite;
+  text-shadow: 0 0 10px rgba(0,255,136,0.5);
+}
+
+@keyframes logoPulse {
+  0% { transform: scale(1); text-shadow: 0 0 5px rgba(0,255,136,0.3); }
+  50% { transform: scale(1.05); text-shadow: 0 0 20px rgba(0,255,136,0.7); }
+  100% { transform: scale(1); text-shadow: 0 0 5px rgba(0,255,136,0.3); }
+}
+
+.nav-area {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-area a {
+  color: #00ff88;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.nav-area a:hover {
+  color: #00cc6a;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-icons a {
+  color: #00ff88;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.nav-icons a:hover {
+  color: #00cc6a;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+  position: relative;
+  /* PROBLEM: no fixed height — CLS */
+}
+
+@keyframes heroGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-pretitle {
+  color: #00ff88;
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  background: #00ff88;
+  color: #0a0a0a;
+  padding: 14px 36px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: inline-block;
+  transition: all 0.3s;
+  /* PROBLEM: Heavy box-shadow animation */
+  box-shadow: 0 4px 15px rgba(0,255,136,0.3);
+}
+
+.btn-primary:hover {
+  background: #00cc6a;
+  /* PROBLEM: box-shadow change triggers expensive paint */
+  box-shadow: 0 8px 30px rgba(0,255,136,0.5);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00ff88;
+  padding: 14px 36px;
+  border: 2px solid #00ff88;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background: #00ff88;
+  color: #0a0a0a;
+}
+
+/* ===== FEATURES ===== */
+.features-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background: #0a0a0a;
+}
+
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #00ff88;
+}
+
+.section-title i {
+  color: #00ff88;
+  margin-right: 10px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  /* PROBLEM: no responsive — breaks on mobile */
+}
+
+/* PROBLEM: unnecessary wrapper divs */
+.feature-wrapper { }
+.feature-inner { }
+.feature-box { }
+
+.feature-content {
+  background: #1a1a2e;
+  padding: 40px 20px;
+  border-radius: 12px;
+  text-align: center;
+  /* PROBLEM: Heavy box-shadow */
+  box-shadow: 0 4px 20px rgba(0,255,136,0.08);
+  border: 1px solid #00ff88;
+  /* PROBLEM: heavy animation on every feature */
+  animation: featureFadeIn 1.5s ease-out;
+  transition: all 0.3s;
+}
+
+.feature-content:hover {
+  /* PROBLEM: box-shadow change triggers paint */
+  box-shadow: 0 12px 40px rgba(0,255,136,0.2);
+  transform: translateY(-5px);
+}
+
+@keyframes featureFadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feature-icon-wrapper {
+  color: #00ff88;
+  margin-bottom: 20px;
+}
+
+.feature-text-wrapper { }
+.feature-title-wrapper { }
+.feature-desc-wrapper { }
+
+.feature-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #e0e0e0;
+}
+
+.feature-content p {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* ===== PRODUCT SECTION ===== */
+.product-section {
+  background: #0f0f0f;
+  padding: 60px 20px;
+}
+
+.product-filter {
+  max-width: 500px;
+  margin: 0 auto 20px;
+}
+
+.product-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  /* PROBLEM: no responsive */
+}
+
+.product-card {
+  /* PROBLEM: Heavy transition with box-shadow */
+  transition: all 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  /* PROBLEM: box-shadow change triggers expensive paint */
+  box-shadow: 0 12px 30px rgba(0,255,136,0.2);
+}
+
+/* ===== STATS ===== */
+.stats-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #0a0a0a;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  /* PROBLEM: no responsive */
+}
+
+.stat-card {
+  background: #1a1a2e;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,255,136,0.08);
+  border: 1px solid #00ff88;
+}
+
+.stat-card .number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #00ff88;
+}
+
+.stat-card .label {
+  color: #888;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+/* ===== SCROLL INDICATOR ===== */
+.scroll-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,255,136,0.9);
+  color: #0a0a0a;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 1000;
+  font-family: monospace;
+  /* PROBLEM: Continuous glow animation */
+  animation: scrollGlow 2s infinite;
+}
+
+@keyframes scrollGlow {
+  0% { box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+  50% { box-shadow: 0 0 25px rgba(0,255,136,0.7); }
+  100% { box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+}
+
+/* ===== PROMO BANNER ===== */
+.promo-banner {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  font-size: 1.3rem;
+  margin: 20px;
+  border-radius: 12px;
+  /* PROBLEM: Continuous animation */
+  animation: promoGlow 3s infinite;
+}
+
+@keyframes promoGlow {
+  0% { box-shadow: 0 0 10px rgba(245,87,108,0.3); }
+  50% { box-shadow: 0 0 30px rgba(245,87,108,0.6); }
+  100% { box-shadow: 0 0 10px rgba(245,87,108,0.3); }
+}
+
+
+/* ==========================================
+   UNUSED CSS — dead code
+   ==========================================
+   ეს სტილები არ გამოიყენება, მაგრამ ბრაუზერი
+   მაინც აპარსავს და მეხსიერებაში ინახავს.
+   Coverage tab-ში წითლად ჩანს.
+*/
+
+.unused-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 5000; display: none; }
+.unused-modal-box { background: white; max-width: 600px; margin: 80px auto; padding: 40px; border-radius: 16px; position: relative; }
+.unused-modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #0a0a0a; }
+.unused-sidebar { position: fixed; left: -350px; top: 0; width: 350px; height: 100%; background: #1a1a2e; z-index: 4000; transition: left 0.3s; box-shadow: 2px 0 20px rgba(0,0,0,0.1); }
+.unused-sidebar.open { left: 0; }
+.unused-sidebar-header { padding: 20px; background: #0a0a0a; color: #00ff88; font-size: 20px; font-weight: 700; }
+.unused-cart-drawer { position: fixed; right: -400px; top: 0; width: 400px; height: 100%; background: #1a1a2e; z-index: 4000; transition: right 0.3s; }
+.unused-cart-drawer.open { right: 0; }
+.unused-cart-item { display: flex; padding: 15px; border-bottom: 1px solid #333; gap: 15px; }
+.unused-cart-img { width: 80px; height: 80px; border-radius: 8px; background: #333; }
+.unused-cart-info { flex: 1; }
+.unused-cart-name { font-weight: 700; color: #e0e0e0; }
+.unused-cart-price { color: #00ff88; font-weight: 700; font-size: 1.1rem; }
+.unused-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #00ff88; color: #0a0a0a; padding: 14px 30px; border-radius: 30px; display: none; font-weight: 600; box-shadow: 0 4px 20px rgba(0,255,136,0.3); }
+.unused-tooltip { position: absolute; background: #1a1a2e; color: #00ff88; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; white-space: nowrap; border: 1px solid #00ff88; }
+.unused-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -6px; border: 6px solid transparent; border-top-color: #1a1a2e; }
+.unused-carousel { position: relative; overflow: hidden; border-radius: 12px; }
+.unused-carousel-track { display: flex; transition: transform 0.5s ease; }
+.unused-carousel-slide { min-width: 100%; }
+.unused-carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
+.unused-carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: #333; cursor: pointer; }
+.unused-carousel-dot.active { background: #00ff88; }
+.unused-filter-bar { display: flex; gap: 10px; padding: 15px 0; overflow-x: auto; }
+.unused-filter-chip { padding: 8px 20px; border-radius: 30px; background: #1a1a2e; font-size: 14px; white-space: nowrap; cursor: pointer; border: 2px solid transparent; }
+.unused-filter-chip.active { background: #00ff88; color: #0a0a0a; border-color: #00ff88; }
+.unused-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.unused-badge-new { background: #00ff88; color: #0a0a0a; }
+.unused-badge-popular { background: #f5576c; color: white; }
+.unused-badge-sale { background: #ffd700; color: #0a0a0a; }
+.unused-skeleton { height: 200px; background: linear-gradient(90deg, #1a1a2e 25%, #2a2a3e 50%, #1a1a2e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.unused-rating-stars { display: flex; gap: 4px; }
+.unused-rating-star { font-size: 20px; cursor: pointer; color: #333; }
+.unused-rating-star.filled { color: #ffd700; }
+.unused-dropdown { position: relative; display: inline-block; }
+.unused-dropdown-menu { position: absolute; top: 100%; left: 0; background: #1a1a2e; border: 1px solid #00ff88; border-radius: 8px; min-width: 200px; padding: 10px 0; display: none; z-index: 100; }
+.unused-dropdown-menu.open { display: block; }
+.unused-dropdown-item { padding: 10px 20px; color: #e0e0e0; cursor: pointer; transition: background 0.2s; }
+.unused-dropdown-item:hover { background: #2a2a3e; color: #00ff88; }
+.unused-breadcrumb { display: flex; gap: 8px; align-items: center; font-size: 14px; color: #888; }
+.unused-breadcrumb-item { color: #888; text-decoration: none; }
+.unused-breadcrumb-item:hover { color: #00ff88; }
+.unused-breadcrumb-separator { color: #555; }
+.unused-breadcrumb-item.active { color: #00ff88; font-weight: 700; }
+.unused-accordion { border: 1px solid #333; border-radius: 12px; overflow: hidden; }
+.unused-accordion-header { padding: 15px 20px; background: #1a1a2e; cursor: pointer; font-weight: 700; color: #e0e0e0; transition: background 0.2s; }
+.unused-accordion-header:hover { background: #2a2a3e; }
+.unused-accordion-content { padding: 15px 20px; background: #0f0f0f; color: #888; display: none; }
+.unused-accordion-content.open { display: block; }
+.unused-pagination { display: flex; gap: 8px; justify-content: center; margin-top: 30px; }
+.unused-pagination-item { padding: 8px 14px; background: #1a1a2e; color: #e0e0e0; border-radius: 8px; cursor: pointer; border: 1px solid #333; }
+.unused-pagination-item:hover { background: #2a2a3e; color: #00ff88; }
+.unused-pagination-item.active { background: #00ff88; color: #0a0a0a; border-color: #00ff88; }

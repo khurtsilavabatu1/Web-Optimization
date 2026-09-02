@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    ==========================================
+    TechStore — განზრახ არაოპტიმიზირებული React აპლიკაცია
+    ==========================================
+    ეს გვერდი სპეციალურად შეიცავს performance პრობლემებს.
+    მიზანი: გაანალიზე DevTools-ით, PSI-ის და WebPageTest-ის კონტექსტში.
+
+    პრობლემების სია:
+    1. არ არის lang, charset, viewport, description
+    2. Render-blocking CSS და JS
+    3. დიდი სურათები (placeholder backgrounds)
+    4. Layout shift — ზომების გარეშე ელემენტები
+    5. No lazy loading
+    6. მძიმე JS main thread-ზე
+    7. ზედმეტი DOM ელემენტები
+    8. გამოუყენებელი CSS/JS
+    9. არა-სემანტიკური HTML
+    10. Accessibility პრობლემები
+    11. ზედმეტი React re-renders
+    12. No memoization
+  -->
+
+  <title>TechStore</title>
+
+  <!-- PROBLEM: Render-blocking CSS from CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- PROBLEM: font-display:block causes invisible text -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=block" rel="stylesheet">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

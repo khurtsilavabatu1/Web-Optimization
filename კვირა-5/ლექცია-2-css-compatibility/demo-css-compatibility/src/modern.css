@@ -1,0 +1,199 @@
+/* ==============================================
+   modern.css
+   Modern CSS features for latest browsers
+   ============================================== */
+
+/* CSS Layers for cascade management */
+@layer base, components, utilities;
+
+@layer base {
+  /* Modern viewport units */
+  .hero {
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+
+  /* Container queries */
+  .container-demo.modern {
+    container-type: inline-size;
+    container-name: demo-container;
+  }
+
+  @container demo-container (min-width: 500px) {
+    .demo-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      text-align: left;
+      gap: 20px;
+    }
+
+    .demo-card-icon {
+      grid-row: 1 / 3;
+      font-size: 4rem;
+    }
+  }
+}
+
+@layer components {
+  /* CSS Nesting */
+  .nesting-demo.modern .nesting-card {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+    &:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
+    }
+
+    h4 {
+      color: white;
+
+      &::after {
+        content: " (Modern)";
+        font-size: 0.7em;
+        opacity: 0.7;
+      }
+    }
+
+    .nesting-btn {
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: #fde047;
+        color: #fde047;
+      }
+    }
+  }
+
+  /* :has() selector */
+  .support-item:has(.support-icon) {
+    padding-left: 20px;
+  }
+
+  .feature-card:has(.comparison-code) {
+    border-left: 4px solid #60a5fa;
+  }
+
+  /* Parent selection with :has() */
+  .demo-block:has(.modern) {
+    border: 2px solid #60a5fa;
+  }
+
+  .demo-block:has(.fallback) {
+    border: 2px solid #fbbf24;
+  }
+}
+
+@layer utilities {
+  /* text-wrap: balance for better typography */
+  .section-title,
+  .demo-title,
+  .feature-title {
+    text-wrap: balance;
+  }
+
+  .section-subtitle,
+  .demo-description,
+  .feature-description {
+    text-wrap: pretty;
+  }
+
+  /* color-mix() for dynamic colors */
+  .style-toggle .toggle-btn.active {
+    background: color-mix(in srgb, #60a5fa 70%, #a78bfa);
+    color: white;
+  }
+
+  .progress-fill {
+    background: color-mix(in srgb, #60a5fa 60%, #34d399);
+  }
+
+  /* Logical properties */
+  .feature-card {
+    padding-inline: 28px;
+    padding-block: 28px;
+    margin-block-end: 24px;
+  }
+
+  /* Modern scrollbar styling */
+  .scrollable-content {
+    scrollbar-width: thin;
+    scrollbar-color: #60a5fa #1e293b;
+  }
+
+  /* Aspect ratio */
+  .color-box {
+    aspect-ratio: 1;
+  }
+
+  /* Modern color functions */
+  .support-item.supported {
+    background: color-mix(in srgb, #22c55e 5%, transparent);
+    border-color: color-mix(in srgb, #22c55e 30%, transparent);
+  }
+
+  .support-item.not-supported {
+    background: color-mix(in srgb, #ef4444 5%, transparent);
+    border-color: color-mix(in srgb, #ef4444 30%, transparent);
+  }
+
+  /* Modern gradient */
+  .navbar {
+    background: color-mix(in srgb, #0f172a 80%, transparent);
+  }
+}
+
+/* Advanced modern features */
+@supports (container-type: inline-size) {
+  /* Additional container query styling */
+  @container (min-width: 600px) {
+    .demo-card h4 {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+@supports selector(:has(p)) {
+  /* Enhanced :has() styling */
+  .demo-block:has(.modern) .demo-title::before {
+    content: "🚀 ";
+  }
+
+  .demo-block:has(.fallback) .demo-title::before {
+    content: "⚙️ ";
+  }
+}
+
+/* Modern media queries with ranges */
+@media (width >= 768px) {
+  .feature-grid {
+    gap: 32px;
+  }
+}
+
+@media (768px <= width < 1024px) {
+  .section {
+    padding-inline: 40px;
+  }
+}
+
+/* View transitions (if supported) */
+@supports (view-transition-name: auto) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+  }
+}
+
+/* Modern backdrop filter */
+.navbar {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+/* Modern focus styles */
+@layer utilities {
+  *:focus-visible {
+    outline: 2px solid color-mix(in srgb, #60a5fa 80%, white);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}

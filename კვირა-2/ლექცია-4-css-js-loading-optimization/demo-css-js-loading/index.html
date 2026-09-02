@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS/JS Loading Optimization Demo — React + Vite</title>
+
+    <!-- OPTIMIZATION 1: Resource Hints — DNS prefetch and preconnect -->
+    <link rel="dns-prefetch" href="https://api.newsportal.ge">
+    <link rel="preconnect" href="https://analytics.example.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- OPTIMIZATION 2: Critical CSS inlined for instant above-the-fold rendering -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        line-height: 1.6;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      /* Loading state */
+      .initial-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-size: 1.2rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="initial-loader">იტვირთება...</div>
+    </div>
+
+    <!-- OPTIMIZATION 3: Vite automatically handles module scripts with defer-like behavior -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

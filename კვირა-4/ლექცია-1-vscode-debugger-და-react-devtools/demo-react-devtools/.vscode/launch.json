@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/კვირა-4/ლექცია-1-vscode-debugger-და-react-devtools/demo-react-devtools"
+    }
+  ]
+}

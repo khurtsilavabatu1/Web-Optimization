@@ -2,7 +2,7 @@
 
 ამ პრაქტიკაში ნახავთ, როგორ მოქმედებს სურათების ფორმატი, lazy loading, responsive images და font optimization ვებგვერდის სიჩქარეზე.
 
-ჩვენ გვაქვს ერთი პროექტი — `demo-image-font-optimization/`. ის აგენერირებს სატესტო სურათებს სხვადასხვა ფორმატში და HTML გვერდზე ყველა კონცეფციას აჩვენებს.
+ჩვენ გვაქვს ერთი პროექტი — `demo-image-font-optimization/`. ეს არის React + Vite აპლიკაცია, რომელიც ყველა ოპტიმიზაციის ტექნიკას აჩვენებს React კომპონენტების სახით.
 
 ---
 
@@ -22,7 +22,7 @@ node setup.js
 ### რას აკეთებს setup.js?
 
 1. **სურათების გენერაცია** — `sharp` ბიბლიოთეკით პროგრამულად ქმნის gradient სურათებს (SVG-ს კოდით აგენერირებს და კონვერტაციას უკეთებს). ყოველ სურათს სამ ფორმატში ინახავს (JPEG, WebP, AVIF), hero-სთვის კი დამატებით სამ responsive ზომასაც ქმნის (400w, 800w, 1200w).
-2. **ფონტის ჩამოტვირთვა** — Google Fonts API-დან იღებს CSS-ს, CSS-იდან regex-ით ამოიღებს WOFF2 ფაილების URL-ებს და ჩამოტვირთავს `fonts/` ფოლდერში. ამით ფონტი self-hosted ხდება.
+2. **ფონტის ჩამოტვირთვა** — Google Fonts API-დან იღებს CSS-ს, CSS-იდან regex-ით ამოიღებს WOFF2 ფაილების URL-ებს და ჩამოტვირთავს `public/fonts/` ფოლდერში. ამით ფონტი self-hosted ხდება.
 
 ნახავთ ასეთ output-ს (ზომები შეიძლება ოდნავ განსხვავდეს):
 
@@ -41,13 +41,13 @@ gallery-1:
 ...
 ```
 
-ახლა გაუშვით HTTP სერვერი:
+ახლა გაუშვით dev სერვერი:
 
 ```bash
-npx serve -l 3000
+npm run dev
 ```
 
-გახსენით ბრაუზერში: `http://localhost:3000`
+გახსენით ბრაუზერში: `http://localhost:5173`
 
 ---
 
@@ -71,13 +71,11 @@ ls -lh images/
 
 ### 1.3 ჩაინიშნეთ
 
-| სურათი | JPEG | WebP | AVIF | დაზოგვა |
-|--------|------|------|------|---------|
-| hero | | | | |
-| gallery-1 | | | | |
-| gallery-2 | | | | |
-| gallery-3 | | | | |
-| gallery-4 | | | | |
+- **hero** — JPEG: _____, WebP: _____, AVIF: _____, დაზოგვა: _____
+- **gallery-1** — JPEG: _____, WebP: _____, AVIF: _____, დაზოგვა: _____
+- **gallery-2** — JPEG: _____, WebP: _____, AVIF: _____, დაზოგვა: _____
+- **gallery-3** — JPEG: _____, WebP: _____, AVIF: _____, დაზოგვა: _____
+- **gallery-4** — JPEG: _____, WebP: _____, AVIF: _____, დაზოგვა: _____
 
 ---
 
@@ -97,13 +95,13 @@ Hero სურათისთვის ბრაუზერმა ავტო�
 
 ### 2.3 როგორ მუშაობს?
 
-HTML-ში `<picture>` ელემენტს აქვს სამი ვარიანტი:
+React კომპონენტში (`src/components/HeroPicture.jsx`) `<picture>` ელემენტს აქვს სამი ვარიანტი:
 
-```html
+```jsx
 <picture>
-  <source srcset="images/hero.avif" type="image/avif">   <!-- 1. ჯერ ცდის AVIF-ს -->
-  <source srcset="images/hero.webp" type="image/webp">   <!-- 2. თუ არ იცის, WebP-ს -->
-  <img src="images/hero.jpg" ...>                         <!-- 3. fallback — JPEG -->
+  <source srcSet="/images/hero.avif" type="image/avif" />   {/* 1. ჯერ ცდის AVIF-ს */}
+  <source srcSet="/images/hero.webp" type="image/webp" />   {/* 2. თუ არ იცის, WebP-ს */}
+  <img src="/images/hero.jpg" fetchPriority="high" />       {/* 3. fallback — JPEG */}
 </picture>
 ```
 
@@ -125,10 +123,8 @@ HTML-ში `<picture>` ელემენტს აქვს სამი ვ�
 
 ### 3.2 Hard refresh (Cmd+Shift+R) და შეადარეთ:
 
-| სურათი | fetchpriority | Priority |
-|--------|--------------|----------|
-| Hero (ზემოთ) | `high` | **High** |
-| Gallery (ქვემოთ) | არ აქვს | Low |
+- **Hero (ზემოთ)** — fetchpriority: `high`, Priority: **High**
+- **Gallery (ქვემოთ)** — fetchpriority: არ აქვს, Priority: Low
 
 ### 3.3 რას ნიშნავს?
 
@@ -161,12 +157,12 @@ Hero image-ისთვის ეს გამართლებულია, �
 
 ### 4.5 მნიშვნელოვანი წესი
 
-| სურათის პოზიცია | loading | fetchpriority |
-|-----------------|---------|---------------|
-| Above the fold (ეკრანზე ჩანს) | `eager` (default) | `high` |
-| Below the fold (სქროლის ქვემოთ) | `lazy` | არ სჭირდება |
+- **Above the fold (ეკრანზე ჩანს)** — loading: `eager` (default), fetchpriority: `high`
+- **Below the fold (სქროლის ქვემოთ)** — loading: `lazy`, fetchpriority: არ სჭირდება
 
 **არასდროს გამოიყენოთ `loading="lazy"` hero image-ზე!** — მომხმარებელი დაინახავს ცარიელ ადგილს.
+
+> React კომპონენტებში lazy loading-ის მაგალითი ნახავთ `src/components/LazyImage.jsx` და `src/components/ResponsiveGallery.jsx` ფაილებში.
 
 ---
 
@@ -190,15 +186,18 @@ Responsive სექციის სურათისთვის ბრაუ�
 
 ### 5.4 როგორ მუშაობს?
 
-```html
+React კომპონენტში (`src/components/HeroPicture.jsx`):
+
+```jsx
 <img
-  srcset="hero-400w.jpg 400w, hero-800w.jpg 800w, hero-1200w.jpg 1200w"
+  srcSet="/images/hero-400w.jpg 400w, /images/hero-800w.jpg 800w, /images/hero-1200w.jpg 1200w"
   sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
-  src="hero-800w.jpg"
->
+  src="/images/hero-800w.jpg"
+  fetchPriority="high"
+/>
 ```
 
-- `srcset` — ბრაუზერს ეუბნები **რა ვერსიები არსებობს**
+- `srcSet` — ბრაუზერს ეუბნები **რა ვერსიები არსებობს**
 - `sizes` — ეუბნები **ეკრანზე რამდენ ადგილს დაიკავებს** სურათი
 - ბრაუზერი ორივეს აერთიანებს და **ოპტიმალურ ვერსიას** ირჩევს
 
@@ -206,11 +205,9 @@ Responsive სექციის სურათისთვის ბრაუ�
 
 ### 5.5 ჩაინიშნეთ
 
-| Viewport | sizes | ჩატვირთული ვერსია | ფაილის ზომა |
-|----------|-------|-------------------|-------------|
-| 375px (iPhone) | 100vw | ___w | ___ KB |
-| 768px (iPad) | 50vw | ___w | ___ KB |
-| 1440px (Desktop) | 33vw | ___w | ___ KB |
+- **375px (iPhone)** — sizes: 100vw, ჩატვირთული ვერსია: ___w, ფაილის ზომა: ___ KB
+- **768px (iPad)** — sizes: 50vw, ჩატვირთული ვერსია: ___w, ფაილის ზომა: ___ KB
+- **1440px (Desktop)** — sizes: 33vw, ჩატვირთული ვერსია: ___w, ფაილის ზომა: ___ KB
 
 ---
 
@@ -220,10 +217,12 @@ Responsive სექციის სურათისთვის ბრაუ�
 
 @font-face არის ფონტის რეგისტრაცია CSS-ში. ბრაუზერს ეუბნები: "ამ სახელის ფონტი ამ ფაილიდან ჩამოტვირთე."
 
+React პროექტში font-face დეკლარაცია `src/index.css` ფაილშია:
+
 ```css
 @font-face {
   font-family: 'Inter-Swap';
-  src: url('fonts/inter-400.woff2') format('woff2');
+  src: url('/fonts/inter-400.woff2') format('woff2');
   font-display: swap;
 }
 ```
@@ -246,12 +245,10 @@ Responsive სექციის სურათისთვის ბრაუ�
 
 ### 6.3 რა უნდა დაინახოთ:
 
-| ვარიანტი | ფონტის ჩატვირთვამდე | ჩატვირთვის შემდეგ |
-|----------|---------------------|-------------------|
-| **block** | ტექსტი **უხილავია** (ცარიელი ადგილი) | ჩნდება custom ფონტით |
-| **swap** | ტექსტი **ჩანს** სისტემური ფონტით | იცვლება custom-ზე |
-| **fallback** | მოკლე ხანს უხილავი, შემდეგ სისტემური | იცვლება (თუ დროში მოესწრო) |
-| **optional** | სისტემური ფონტით | იცვლება მხოლოდ თუ ძალიან სწრაფად ჩაიტვირთა |
+- **block** — ფონტის ჩატვირთვამდე: ტექსტი **უხილავია** (ცარიელი ადგილი), ჩატვირთვის შემდეგ: ჩნდება custom ფონტით
+- **swap** — ფონტის ჩატვირთვამდე: ტექსტი **ჩანს** სისტემური ფონტით, ჩატვირთვის შემდეგ: იცვლება custom-ზე
+- **fallback** — ფონტის ჩატვირთვამდე: მოკლე ხანს უხილავი, შემდეგ სისტემური, ჩატვირთვის შემდეგ: იცვლება (თუ დროში მოესწრო)
+- **optional** — ფონტის ჩატვირთვამდე: სისტემური ფონტით, ჩატვირთვის შემდეგ: იცვლება მხოლოდ თუ ძალიან სწრაფად ჩაიტვირთა
 
 ### 6.4 რომელი გამოვიყენოთ?
 
@@ -259,7 +256,7 @@ Responsive სექციის სურათისთვის ბრაუ�
 
 ### 6.5 სისტემური ფონტი (fallback) სად ვწერთ?
 
-`font-family`-ში fallback-ად:
+`font-family`-ში fallback-ად (`src/index.css`):
 
 ```css
 body {
@@ -268,6 +265,8 @@ body {
 ```
 
 `Arial` და `sans-serif` ყველა კომპიუტერზე დაყენებულია — ჩამოტვირთვა არ სჭირდებათ. `font-display: swap`-ის დროს ბრაუზერი სწორედ მათ აჩვენებს, სანამ Inter ჩაიტვირთება.
+
+> React კომპონენტში font-display-ის 4 ვარიანტი ნახავთ `src/components/FontDisplayDemo.jsx` ფაილში.
 
 ---
 
@@ -288,18 +287,50 @@ body {
 
 ### 7.2 სხვაობა
 
-| | Self-hosted | Google Fonts CDN |
-|---|---|---|
-| **Request-ების რაოდენობა** | 1 | 2+ |
-| **DNS lookup** | არ სჭირდება | 2 სერვერისთვის |
-| **კონტროლი** | სრული | Google-ზე დამოკიდებული |
-| **ქეშირება** | შენი სერვერის წესებით | Google-ის წესებით |
+**Request-ების რაოდენობა**
+- Self-hosted: 1
+- Google Fonts CDN: 2+
+
+**DNS lookup**
+- Self-hosted: არ სჭირდება
+- Google Fonts CDN: 2 სერვერისთვის
+
+**კონტროლი**
+- Self-hosted: სრული
+- Google Fonts CDN: Google-ზე დამოკიდებული
+
+**ქეშირება**
+- Self-hosted: შენი სერვერის წესებით
+- Google Fonts CDN: Google-ის წესებით
 
 Self-hosted უკეთესია performance-ის კუთხით, რადგან ბრაუზერს ნაკლები კავშირის დამყარება სჭირდება.
 
 ### 7.3 throttling-ის გამორთვა
 
 არ დაგავიწყდეთ! Network throttling → **"No throttling"** დააბრუნეთ.
+
+---
+
+## დამატებითი რესურსები
+
+### React კომპონენტების სტრუქტურა
+
+პროექტი აგებულია შემდეგი კომპონენტებით:
+
+- **`src/App.jsx`** — მთავარი კომპონენტი, ყველაფრის კონტეინერი
+- **`src/components/HeroPicture.jsx`** — `<picture>` ელემენტის დემო (AVIF/WebP/JPEG fallback)
+- **`src/components/ResponsiveGallery.jsx`** — responsive images (`srcSet` + `sizes`) და lazy loading
+- **`src/components/LazyImage.jsx`** — lazy loading-ის მექანიზმის დემო
+- **`src/components/FontDisplayDemo.jsx`** — font-display-ის 4 ვარიანტის ვიზუალური შედარება
+- **`src/components/PerformanceMetrics.jsx`** — რეალურ დროში performance მეტრიკების ჩვენება
+
+### setup.js სკრიპტი
+
+`setup.js` სკრიპტი პროექტის root დირექტორიაშია და პასუხისმგებელია სურათებისა და ფონტების გენერაციაზე. მას შეგიძლიათ ნებისმიერ დროს გაუშვათ თავიდან:
+
+```bash
+node setup.js
+```
 
 ---
 
