@@ -725,3 +725,14 @@ const addTask = (text) => {
 6. **React DevTools — debugging-ის საფუძველი** — Components tab state-ის, props-ის, hooks-ის ინსპექტირებისთვის. Profiler tab performance-ისთვის. Console-ის `$r` — არჩეული კომპონენტი.
 
 7. **პრევენცია** — ESLint + `eslint-plugin-react-hooks`, TypeScript, React StrictMode (ორმაგი render-ით bugs-ს ამჟღავნებს), Unit Tests (Vitest, Jest).
+
+---
+
+## შემდეგი ნაბიჯი: დამოუკიდებელი დავალება
+
+გაიდის დასრულების შემდეგ გაიარეთ დავალება იმავე ტიპის ბაგებზე, ოღონდ **ახალ პროექტზე და მინიშნებების გარეშე**:
+
+- **დავალების ინსტრუქცია:** [`დავალება/README.md`](დავალება/README.md)
+- **პროექტი:** [`დავალება/homework-debugging/`](დავალება/homework-debugging/) — Habit Tracker, 6 ბაგი, `// BUG #N` კომენტარების გარეშე
+- **ანგარიშის შაბლონი:** [`დავალება/ანგარიშის-შაბლონი.md`](დავალება/ანგარიშის-შაბლონი.md)
+- **დამატებითი წყაროები:** [`გარე-რესურსები.md`](გარე-რესურსები.md)
