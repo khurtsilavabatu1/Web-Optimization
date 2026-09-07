@@ -48,11 +48,8 @@ export default function App() {
   };
 
   const handleRemoveItem = (productId) => {
-    console.log('🗑️ App.handleRemoveItem()', { productId });
-
-    // BUG #3: filters cart but never updates state — UI won't re-render
-    cart.filter(item => item.id !== productId);
-  };
+  setCart(prevCart => prevCart.filter(item => item.id !== productId));
+};
 
   const handleClearCart = () => {
     console.log('🧹 App.handleClearCart()');

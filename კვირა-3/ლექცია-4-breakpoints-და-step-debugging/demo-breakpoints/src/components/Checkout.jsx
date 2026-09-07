@@ -16,7 +16,10 @@ export default function Checkout({ cart, total, onCheckoutComplete }) {
 
   const handleCheckout = () => {
     console.log('💳 Checkout.handleCheckout() — Entry', { cart, total });
-
+     if (cart.length === 0) {
+    alert('კალათა ცარიელია! ჯერ პროდუქტი დაამატეთ.');
+    return;
+  }
     // BUG #4: No empty cart validation — cart[0] is undefined when cart is empty
     setIsProcessing(true);
 

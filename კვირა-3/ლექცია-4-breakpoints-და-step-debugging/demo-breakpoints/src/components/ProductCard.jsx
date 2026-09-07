@@ -26,7 +26,7 @@ export default function ProductCard({ product, onAddToCart }) {
   const handleAddToCart = () => {
     console.log('🛒 handleAddToCart() — Entry', { product, quantity });
     // BUG #2: always sends 1 instead of the selected quantity
-    onAddToCart(product, 1);
+    onAddToCart(product, quantity);
     console.log('🛒 handleAddToCart() — Exit');
   };
 
