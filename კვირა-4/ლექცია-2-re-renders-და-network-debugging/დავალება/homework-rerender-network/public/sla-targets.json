@@ -1,0 +1,4 @@
+{
+  "firstResponseMinutes": { "high": 15, "medium": 60, "low": 240 },
+  "resolutionMinutes": { "high": 240, "medium": 1440, "low": 4320 }
+}

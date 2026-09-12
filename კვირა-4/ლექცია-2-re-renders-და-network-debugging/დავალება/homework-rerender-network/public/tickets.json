@@ -1,0 +1,10 @@
+[
+  { "id": 101, "subject": "ანგარიშზე შესვლა ვერ ხდება", "customer": "ნინო ბერიძე", "priority": "high" },
+  { "id": 102, "subject": "გადახდა ორჯერ ჩამოიჭრა", "customer": "გიორგი კაპანაძე", "priority": "high" },
+  { "id": 103, "subject": "ინვოისის PDF არ იხსნება", "customer": "ანა ჩიქოვანი", "priority": "medium" },
+  { "id": 104, "subject": "მობილურზე ღილაკი არ რეაგირებს", "customer": "ლევან ხუციშვილი", "priority": "medium" },
+  { "id": 105, "subject": "შეტყობინებები აღარ მოდის", "customer": "თამარ გელაშვილი", "priority": "low" },
+  { "id": 106, "subject": "ექსპორტი CSV-ში ცარიელია", "customer": "დათო მაისურაძე", "priority": "high" },
+  { "id": 107, "subject": "პაროლის აღდგენის ბმული ვადაგასულია", "customer": "მარიამ ჯანელიძე", "priority": "medium" },
+  { "id": 108, "subject": "ანგარიშის წაშლა მინდა", "customer": "ზურაბ ნოზაძე", "priority": "low" }
+]

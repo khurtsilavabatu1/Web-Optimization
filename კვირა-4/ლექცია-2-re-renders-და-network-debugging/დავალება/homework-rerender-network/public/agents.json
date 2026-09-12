@@ -1,0 +1,6 @@
+[
+  { "id": 1, "name": "ლიკა", "shift": "დილა", "openTickets": 4 },
+  { "id": 2, "name": "საბა", "shift": "დღე", "openTickets": 6 },
+  { "id": 3, "name": "ქეთი", "shift": "საღამო", "openTickets": 3 },
+  { "id": 4, "name": "ოთო", "shift": "ღამე", "openTickets": 2 }
+]
