@@ -216,29 +216,222 @@ backdrop-filter: blur(12px);
 
 ### Autoprefixer — ავტომატური გამოსავალი
 
-ხელით prefix-ების დაწერა შრომატევადია. **Autoprefixer** ავტომატურად ამატებს საჭირო prefix-ებს:
+ხელით prefix-ების დაწერა შრომატევადია და ძველდება: დღეს საჭირო prefix ორი წლის
+შემდეგ ზედმეტი ნაგავია. **Autoprefixer** ამ სამუშაოს build-ზე იღებს.
+
+#### ვარიანტი ა: ცალკე CLI-ით (სასწავლო მიზნით)
 
 ```bash
-# ინსტალაცია
 npm install autoprefixer postcss postcss-cli --save-dev
-
-# გაშვება
 npx postcss styles.css --use autoprefixer -o styles.prefixed.css
 ```
 
-Autoprefixer იყენებს **Browserslist**-ს, რომ განსაზღვროს, რომელი ბრაუზერები უნდა იყოს მხარდაჭერილი. `package.json`-ში:
+#### ვარიანტი ბ: Vite-ში (რეალურ პროექტში ასე კეთდება)
+
+Vite CSS-ს უკვე PostCSS-ით ამუშავებს — უბრალოდ `postcss.config.js` უნდა დადო
+პროექტის ფესვში და Vite თავად აღმოაჩენს მას (**დამატებითი კონფიგურაცია არ სჭირდება**):
+
+```bash
+npm install -D autoprefixer postcss
+```
+
+```js
+// postcss.config.js
+import autoprefixer from 'autoprefixer'
+
+export default {
+  plugins: [autoprefixer()],
+}
+```
+
+> ⚠️ **ხშირი გაუგებრობა**: `postcss` პაკეტი `node_modules`-ში იმ შემთხვევაშიც
+> გიდევს, თუ არაფერი დაგიყენებია — ის Vite-ის **საკუთარი** dependency-ია.
+> ეს იმას *არ* ნიშნავს, რომ Autoprefixer მუშაობს. Autoprefixer ცალკე უნდა
+> დააყენო და `postcss.config.js`-ში ჩართო.
+
+#### Browserslist — ვინ წყვეტს, რომელი prefix დაემატოს
+
+Autoprefixer თვითონ არაფერს „წყვეტს". ის [caniuse](https://caniuse.com)-ის
+მონაცემებს კითხულობს და **Browserslist**-ის სიას უდარებს. სია `package.json`-ში:
 
 ```json
 {
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
+    "> 0.2%",
+    "last 4 versions",
+    "Safari >= 12",
     "not dead"
   ]
 }
 ```
 
-> **რეკომენდაცია**: თანამედროვე პროექტებში ყოველთვის გამოიყენეთ Autoprefixer build pipeline-ში. ეს გათავისუფლებთ prefix-ების ხელით წერისგან და Browserslist-ით კონფიგურირებადია.
+რომ ნახო, კონკრეტულად რომელი ბრაუზერები მოხვდა სიაში:
+
+```bash
+npx browserslist
+```
+
+**სიის სიგანე პირდაპირ განსაზღვრავს output-ს.** მაგალითად:
+
+| browserslist | `backdrop-filter`-ს დაემატება `-webkit-`? |
+|---|---|
+| `defaults` | ❌ არა — სიაში მოხვედრილ ბრაუზერებს უკვე უპრეფიქსოდ აქვთ |
+| `Safari >= 12` | ✅ დიახ — Safari 12–17 მხოლოდ prefix-ით იცნობს |
+
+ანუ თუ „Autoprefixer-მა არაფერი დაამატა", ეს ხშირად **სწორი** შედეგია: სამიზნე
+ბრაუზერებს prefix არ სჭირდებათ.
+
+> **რეკომენდაცია**: თანამედროვე პროექტებში ყოველთვის გამოიყენეთ Autoprefixer
+> build pipeline-ში და **წაშალეთ ხელით დაწერილი prefix-ები** — თორემ ორმაგდება
+> და ძველდება.
+
+#### რას *არ* აკეთებს Autoprefixer
+
+ეს ხშირად ერევათ. Autoprefixer მხოლოდ **სტანდარტული** property-ების prefix-იან
+ვარიანტებს ქმნის. ის **არასოდეს** გამოიტანს:
+
+- `::-webkit-scrollbar`, `::-moz-range-thumb` — ცალკეული ბრაუზერის საკუთარი
+  pseudo-element-ებია, სტანდარტში არ არსებობენ
+- `-webkit-text-fill-color` — WebKit-ის საკუთარი property-ია, არა prefix
+- `@media (-ms-high-contrast: active)` — IE-ის საკუთარი media feature
+- **polyfill-ები** — Autoprefixer სინტაქსს ეხება, არა ფუნქციონალს. თუ ბრაუზერს
+  `color-mix()` არ აქვს, prefix ვერაფერს უშველის — იქ `@supports` fallback სჭირდება.
+
+#### სცადე დემოზე
+
+`demo-css-compatibility` პროექტში:
+
+```bash
+npm install
+npm run prefixes     # აჩვენებს, ზუსტად რა prefix-ებს ამატებს Autoprefixer
+npm run build        # dist/assets/*.css — შედეგი უკვე prefix-ებიანი
+```
+
+შემდეგ შეცვალე `package.json`-ის `browserslist` (მაგ. დაწერე მხოლოდ
+`["last 1 chrome version"]`) და ისევ გაუშვი `npm run prefixes` — დაინახავ,
+როგორ ქრება prefix-ები.
+
+---
+
+## ეტაპი 6.5: სრული ფლოუ — build-იდან მომხმარებლის ეკრანამდე
+
+აქამდე ვნახეთ, *რა* აკეთებს Autoprefixer. ახლა ვნახოთ, *როდის* — და რა ხდება
+მაშინ, როცა კონკრეტული ადამიანი შემოდის საიტზე.
+
+### მთავარი წესი
+
+> **ყველაფერი build-ზე წყდება. request-ზე — არაფერი.**
+
+`npm run build` შენს მანქანაზე ორშაბათს გაუშვი. მომხმარებელი პარასკევს შემოვიდა.
+build-ს არ უნახავს და ვერც ნახავდა, ვინ მოვა. ანუ **ყველასთვის ერთი და იგივე
+`dist/` არსებობს.**
+
+### 6.5.1 ფაზა 1 — Build (შენს მანქანაზე)
+
+```
+  src/App.css                 postcss.config.js          package.json
+  .navbar {                   plugins: [                 "browserslist": [
+    position: sticky;    ──▶    autoprefixer()    ◀──      "Safari >= 12"
+  }                           ]                          ]
+                                     │
+                                     ▼
+                          ┌──────────────────────┐
+                          │  npm run build        │
+                          │  Vite → PostCSS       │
+                          │       → Autoprefixer  │
+                          └──────────┬───────────┘
+                                     ▼
+                     dist/assets/index-Cd24So0k.css
+                     ┌───────────────────────────────────────┐
+                     │ .navbar{position:-webkit-sticky;      │
+                     │         position:sticky}              │
+                     └───────────────────────────────────────┘
+                          ☝️ ორივე ვერსია ერთ ფაილში
+```
+
+**დაიმახსოვრე:** CSS-ის ფაილი **ერთია**. გაყოფა არ ხდება.
+
+### 6.5.2 ფაზა 2 — Deploy
+
+`dist/`-ს სერვერზე დებ. ეს უბრალო ტექსტური ფაილებია — `node_modules` აღარ
+სჭირდებათ, Autoprefixer აღარ სჭირდებათ. მათი საქმე დამთავრებულია.
+
+### 6.5.3 ფაზა 3 — მომხმარებელი შემოდის
+
+სერვერი `User-Agent` header-ს იღებს, მაგრამ **არ იყენებს**. სტატიკური ჰოსტინგი
+ყველას იდენტურ ბაიტებს უგზავნის.
+
+```
+   ახალი ბრაუზერი (Safari 18)          ძველი ბრაუზერი (Safari 12)
+            │                                     │
+            │  GET /assets/index-Cd24So0k.css     │
+            ▼                                     ▼
+   ╔════════════════════════════════════════════════════════╗
+   ║   ერთი და იგივე ფაილი, ბაიტში ბაიტი                    ║
+   ║   .navbar{position:-webkit-sticky;position:sticky}      ║
+   ╚════════════════════════════════════════════════════════╝
+            │                                     │
+            ▼                                     ▼
+   position:-webkit-sticky  ✅ ვიცი      position:-webkit-sticky  ✅ ვიცი
+   position:sticky          ✅ ვიცი      position:sticky          ❓ არ ვიცი
+            │                                     │      → ამ ხაზს ვტოვებ
+            ▼                                     ▼
+   იყენებს: sticky                       იყენებს: -webkit-sticky
+   (ბოლო გასაგები იმარჯვებს)             (გაუგებარი უგულებელყოფილია)
+```
+
+### 6.5.4 რატომ მუშაობს ეს — CSS-ის „მიმტევებლობა"
+
+CSS სპეციფიკაცია ავალდებულებს ბრაუზერს: **გაუგებარი declaration ჩუმად
+გამოტოვე და დანარჩენი გააგრძელე.** შეცდომა არ არის, გაფრთხილება არ არის.
+
+სწორედ ამიტომ არის **თანმიმდევრობა კრიტიკული**:
+
+```css
+/* ✅ სწორი — prefix ჯერ, სტანდარტი ბოლოს */
+position: -webkit-sticky;
+position: sticky;
+
+/* ❌ არასწორი — ახალი ბრაუზერი prefix-იანს გამოიყენებს */
+position: sticky;
+position: -webkit-sticky;
+```
+
+ორივე declaration ვალიდურია ახალი ბრაუზერისთვის, ამიტომ **ბოლო იმარჯვებს**
+(cascade-ის წესი). Autoprefixer ამას ავტომატურად სწორად აწყობს.
+
+### 6.5.5 შედარება: CSS vs JavaScript
+
+ეს ხშირად ერევათ — **CSS და JS სხვადასხვა მექანიზმით მუშაობს** (JS-ს ლექცია 3-ში
+დეტალურად ვნახავთ):
+
+| | CSS (Autoprefixer) | JavaScript (Babel) |
+|---|---|---|
+| გაუგებარ კოდს რას უშვრება | **ხაზს** ჩუმად გამოტოვებს | **მთელი ფაილი** ჩავარდება (`SyntaxError`) |
+| შეიძლება ორივე ვერსია ერთ ფაილში? | ✅ დიახ | ❌ არა |
+| რამდენი ფაილი იქმნება build-ზე | **1** | **2** (modern + legacy) |
+| ვინ ირჩევს | არავინ — ერთია | ბრაუზერი, `module`/`nomodule`-ით |
+| ძველი ბრაუზერი | უცნობ **ხაზს** ტოვებს | უცნობ **ფაილს** არ ტვირთავს |
+
+> **დასკვნა:** Autoprefixer-ს ბანდლის გაყოფა არ სჭირდება, რადგან CSS თვითონ
+> უმკლავდება უცნობ სინტაქსს. JS-ს ეს ფუფუნება არ აქვს — ერთი გაუგებარი სიმბოლო
+> და სკრიპტი მთლიანად კვდება. სწორედ ამიტომ არსებობს `nomodule` ხრიკი.
+
+### 6.5.6 შეამოწმე თავად
+
+```bash
+npm run build
+npm run preview
+```
+
+შემდეგ სხვადასხვა `User-Agent`-ით გამოითხოვე იგივე გვერდი:
+
+```bash
+curl -s -A "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0)" http://localhost:4173/ | md5
+curl -s -A "Mozilla/5.0 (Macintosh) Chrome/141.0.0.0"           http://localhost:4173/ | md5
+```
+
+**ორივე md5 იდენტური იქნება** — სერვერი არავის არაფერს არჩევს.
 
 ---
 

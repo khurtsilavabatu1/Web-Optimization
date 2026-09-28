@@ -1,6 +1,15 @@
 /* ==============================================
    fallback.css
    Fallback styles for older browsers
+
+   ⚠️ ამ ფაილში vendor prefix-ები *განზრახ* ხელითაა დაწერილი —
+   ეს არის „როგორ კეთდებოდა Autoprefixer-ამდე" საჩვენებელი ნიმუში.
+   შეადარე src/modern.css-ს, სადაც prefix-ები საერთოდ არ წერია და
+   Autoprefixer ამატებს მათ build-ზე.
+
+   ::-webkit-scrollbar, ::-moz-range-thumb და -ms-high-contrast
+   Autoprefixer-ს *არასოდეს* გამოაქვს — ესენი ცალკეული ბრაუზერის
+   საკუთარი pseudo-element/media feature-ებია, არა სტანდარტის prefix-ები.
    ============================================== */
 
 /* Traditional viewport units */

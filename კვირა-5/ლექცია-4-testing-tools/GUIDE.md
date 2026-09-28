@@ -299,7 +299,7 @@ Cloud-based ტესტირება **რეალურ მოწყობ�
 BrowserStack-ი გაძლევთ წვდომას **რეალურ მოწყობილობებზე** cloud-იდან. DevTools-ისგან განსხვავებით, აქ ნამდვილი Safari რეალურ iPhone-ზე მუშაობს, ნამდვილი Samsung Browser ნამდვილ Galaxy-ზე — არა ემულაცია, არამედ ფიზიკური მოწყობილობა data center-ში.
 
 ```
-DevTools (ემულაცია):                    BrowserStack (რეალური):
+DevTools (სიმულაცია):                    BrowserStack (რეალური):
 ┌──────────────────────┐               ┌──────────────────────┐
 │ შენი Chrome ბრაუზერი │               │ ნამდვილი iPhone 14   │
 │ Blink engine         │               │ WebKit engine (Safari)│

@@ -186,7 +186,6 @@
 /* Modern backdrop filter */
 .navbar {
   backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
 }
 
 /* Modern focus styles */
