@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prefixes": "node scripts/show-prefixes.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -14,6 +15,14 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.6.0",
+    "postcss": "^8.5.28",
     "vite": "^6.0.3"
-  }
+  },
+  "browserslist": [
+    "> 0.2%",
+    "last 4 versions",
+    "Safari >= 12",
+    "not dead"
+  ]
 }

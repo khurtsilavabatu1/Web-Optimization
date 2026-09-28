@@ -6,6 +6,13 @@ import ColorMixDemo from './components/ColorMixDemo'
 import CssNestingDemo from './components/CssNestingDemo'
 import SupportDetector from './components/SupportDetector'
 
+// `?url` — Vite ამ ორ CSS-ს ჩვეულებრივ asset-ად ააგებს (PostCSS/Autoprefixer
+// გატარებით და hash-იანი სახელით), ხოლო ცვლადში მისი საბოლოო URL ჩაგვიდებს.
+// ხელით ჩაწერილი '/src/modern.css' მხოლოდ dev-ში მუშაობდა — build-ის შემდეგ
+// ასეთი ბილიკი dist/-ში აღარ არსებობს.
+import modernCssUrl from './modern.css?url'
+import fallbackCssUrl from './fallback.css?url'
+
 function App() {
   const [useModern, setUseModern] = useState(true)
 
@@ -19,12 +26,12 @@ function App() {
       const modern = document.createElement('link')
       modern.id = 'modern-css'
       modern.rel = 'stylesheet'
-      modern.href = '/src/modern.css'
+      modern.href = modernCssUrl
 
       const fallback = document.createElement('link')
       fallback.id = 'fallback-css'
       fallback.rel = 'stylesheet'
-      fallback.href = '/src/fallback.css'
+      fallback.href = fallbackCssUrl
 
       document.head.appendChild(modern)
       document.head.appendChild(fallback)

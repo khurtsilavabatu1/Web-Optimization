@@ -114,6 +114,61 @@ body {
   gap: 1.5rem;
 }
 
+/* ===== Target Picker (ცოცხალი Babel-ის სამიზნეები) ===== */
+.target-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.target-picker-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-right: 0.25rem;
+}
+
+.target-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.target-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.target-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.target-hint {
+  color: var(--text-secondary);
+  flex-basis: 100%;
+  font-size: 0.82rem;
+  margin: 0.25rem 0 0;
+}
+
+.babel-status {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 1.5rem 0;
+}
+
+.babel-status.error {
+  color: #ef4444;
+}
+
 /* ===== Code Comparison ===== */
 .code-comparison {
   background: var(--bg-card);

@@ -60,8 +60,27 @@ npm run dev
 
 - ყველა ფუნქცია მუშაობს თანამედროვე ბრაუზერში
 - CodeComparison კომპონენტი აჩვენებს თანამედროვე და ტრანსპილირებულ ვერსიებს გვერდიგვერდ
+- **მარჯვენა პანელი ცოცხალი Babel-ის output-ია** — `@babel/standalone` პირდაპირ
+  ბრაუზერში მუშაობს, ტექსტი წინასწარ ჩაწერილი არ არის
 - PolyfillCard კომპონენტები აჩვენებს თითოეული polyfill-ის მუშაობას
 - RunButton ღილაკებით შეგიძლიათ გაუშვათ თითოეული დემო
+
+### 1.5 სამიზნე ბრაუზერების გადამრთველი
+
+TranspilationDemo-ს თავზე სამი ღილაკია — **ES5 (IE 11)**, **Safari 12**,
+**თანამედროვე**. დააჭირეთ თითოეულს და უყურეთ, როგორ იცვლება მარჯვენა პანელი.
+
+მაგალითად `const city = user?.address?.city ?? 'უცნობი'`:
+
+| სამიზნე | შედეგი |
+|---|---|
+| **ES5 (IE 11)** | `var` + სრული `!== null && !== void 0` ჯაჭვი |
+| **Safari 12** | `const` რჩება, მაგრამ `?.`/`??` მაინც იშლება |
+| **თანამედროვე** | კოდი **საერთოდ არ იცვლება** |
+
+> ეს არის ეტაპის მთავარი დასკვნა: **„ტრანსპილაცია" ერთი ფიქსირებული რამ არ არის.**
+> რა მოხდება კოდთან, სრულად `targets`-ზეა დამოკიდებული. თუ სამიზნე ბრაუზერები
+> ისედაც იცნობენ სინტაქსს, Babel ხელს არ ახლებს — და ბანდლიც პატარა რჩება.
 
 ### 1.4 სცადეთ Console-ში
 
@@ -259,6 +278,260 @@ npm install --save-dev @babel/core @babel/cli @babel/preset-env
 # ტრანსპილაცია
 npx babel src --out-dir dist
 ```
+
+---
+
+## ეტაპი 4.6: Vite-ში Babel — რა ერთვება ავტომატურად და რა არა
+
+ეს ყველაზე ხშირად დასმული კითხვაა და პასუხი ორნაწილიანია.
+
+### რა ერთვება ავტომატურად
+
+`@vitejs/plugin-react` შიგნით **Babel-ს იყენებს** — React Fast Refresh-ისა და
+JSX transform-ისთვის. ამიტომ `@babel/core` `node_modules`-ში გიდევს მაშინაც კი,
+თუ `package.json`-ში არსად დაგიწერია:
+
+```bash
+ls node_modules/@babel
+# core  parser  traverse  plugin-transform-react-jsx-self  ...
+```
+
+> ⚠️ ეს **არ** ნიშნავს, რომ `@babel/preset-env` ან polyfill-ები მუშაობს.
+> plugin-react-ის Babel მხოლოდ JSX-ს და Fast Refresh-ს ემსახურება.
+
+### რა *არ* ერთვება ავტომატურად
+
+| რამ | Vite-ს მოყვება? | სად მოდის |
+|---|---|---|
+| JSX → JS | ✅ დიახ | `@vitejs/plugin-react` (Babel-ით) |
+| სინტაქსის downlevel | ✅ დიახ | **esbuild**, `build.target`-ის მიხედვით |
+| `@babel/preset-env` | ❌ არა | `@vitejs/plugin-legacy` |
+| `core-js` polyfill-ები | ❌ არა | `@vitejs/plugin-legacy` |
+| legacy `nomodule` ბანდლი | ❌ არა | `@vitejs/plugin-legacy` |
+
+**მნიშვნელოვანი**: Vite-ის ჩვეულებრივი build მხოლოდ **სინტაქსს** ამცირებს
+(esbuild-ით). polyfill-ებს **არ ამატებს**. ანუ `Object.hasOwn()` თქვენს ბანდლში
+ისე დარჩება, როგორც დაწერეთ — და ძველ ბრაუზერში გატყდება.
+
+### რატომ *არ* კითხულობს Vite `babel.config.json`-ს
+
+`@vitejs/plugin-react` Babel-ს `babelrc: false, configFile: false`-ით იძახებს.
+ანუ ეტაპი 4.1-ის `babel.config.json` პროექტის ფესვში რომ დადოთ — **ignore-დება**.
+რომ წაიკითხოს, ცალკე უნდა ჩართოთ:
+
+```js
+react({ babel: { babelrc: true, configFile: true } })
+```
+
+> პრაქტიკაში ეს იშვიათად სჭირდება. Vite-ში სწორი გზა `@vitejs/plugin-legacy`-ია.
+
+### @vitejs/plugin-legacy — preset-env + core-js Vite-ისთვის
+
+```bash
+npm install -D @vitejs/plugin-legacy terser
+```
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import legacy from '@vitejs/plugin-legacy'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    legacy({
+      targets: ['defaults', 'not IE 11'],
+      renderLegacyChunks: true,   // legacy nomodule ბანდლი
+      modernPolyfills: true,      // polyfill-ები modern ბანდლისთვისაც
+    }),
+  ],
+})
+```
+
+> **Vite-ის ვერსია მნიშვნელოვანია.** `@vitejs/plugin-legacy@8` Vite 8-ს ითხოვს.
+> Vite 5-ზე `npm i -D @vitejs/plugin-legacy@^5.4.3` დააყენეთ, თორემ
+> `ERESOLVE unable to resolve dependency tree` შეცდომას მიიღებთ.
+
+`npm run build`-ის შემდეგ `dist/assets/`-ში **ორი კომპლექტი** გაჩნდება:
+
+```
+index-DoY6G_8O.js            151 kB   ← modern  (<script type="module">)
+polyfills-BMCQ5me4.js         92 kB   ← modern polyfills
+index-legacy-B9mZLyAM.js     154 kB   ← legacy  (<script nomodule>)
+polyfills-legacy-*.js         63 kB   ← core-js + regenerator + SystemJS
+```
+
+და `index.html`-ში:
+
+```html
+<script type="module" src="/assets/index-....js"></script>
+<script nomodule src="/assets/polyfills-legacy-....js"></script>
+<script nomodule id="vite-legacy-entry" data-src="/assets/index-legacy-....js"></script>
+```
+
+`type="module"` და `nomodule` ერთმანეთს გამორიცხავს: **თითოეული ბრაუზერი
+მხოლოდ ერთ კომპლექტს ჩამოტვირთავს**, არა ორივეს. ეს არის „ორჯერ დიდი build,
+მაგრამ არა ორჯერ დიდი ჩამოტვირთვა".
+
+### სცადეთ დემოზე
+
+```bash
+npm install
+npm run build
+npm run bundles     # modern vs legacy შედარება + <script> თეგები
+```
+
+---
+
+## ეტაპი 4.7: სრული ფლოუ — build-იდან მომხმარებლის ეკრანამდე
+
+ყველაზე ხშირი გაუგებრობა: *„როდის ხდება ბრაუზერის ვერსიის გარკვევა? მაშინ, როცა
+მომხმარებელი საიტზე შემოდის?"*
+
+**არა.** ბრაუზერის ვერსია build-ზე საერთოდ არავის აინტერესებს.
+
+### მთავარი წესი
+
+> **ყველაფერი build-ზე წყდება. request-ზე — არაფერი.**
+
+`npm run build` შენს მანქანაზე ორშაბათს გაუშვი. მომხმარებელი პარასკევს შემოვიდა.
+build-ს არ უნახავს და ვერც ნახავდა, ვინ მოვა. `targets` კითხვას პასუხობს
+**„რისთვის მოვამზადო?"**, და არა „ვინ მოვიდა?".
+
+### 4.7.1 ფაზა 1 — Build (შენს მანქანაზე)
+
+```
+  src/App.jsx                  vite.config.js             package.json
+  const city =                 legacy({                   "browserslist": [
+    user?.address?.city  ──▶     targets: [...]   ◀──       "> 0.2%", ...
+                                })                         ]
+                                      │
+                                      ▼
+                         ┌────────────────────────────┐
+                         │  npm run build              │
+                         │  Vite → @babel/preset-env   │
+                         │       → core-js             │
+                         └──────────┬─────────────────┘
+                                    ▼
+                    ┌───────────────┴───────────────┐
+                    ▼                               ▼
+         index-DoY6G_8O.js                index-legacy-B9mZLyAM.js
+         ┌─────────────────────┐          ┌──────────────────────────┐
+         │ user?.address?.city │          │ user === null ||         │
+         │ (უცვლელი)           │          │ user === void 0 ? ...    │
+         └─────────────────────┘          └──────────────────────────┘
+         polyfills-*.js  (პატარა)         polyfills-legacy-*.js
+                                          (core-js + regenerator + SystemJS)
+```
+
+**დაიმახსოვრე:** JS-ის ფაილი **ორია**. ორივე ერთდროულად არსებობს `dist/`-ში.
+
+### 4.7.2 ფაზა 2 — Deploy
+
+`dist/`-ს სერვერზე დებ. Babel-ი, core-js, `node_modules` — არაფერი მიჰყვება.
+მათი საქმე build-ზე დამთავრდა.
+
+### 4.7.3 ფაზა 3 — მომხმარებელი შემოდის
+
+სერვერი `User-Agent` header-ს იღებს, მაგრამ **არ იყენებს**. ყველას იდენტურ
+`index.html`-ს უგზავნის:
+
+```html
+<script type="module" crossorigin src="/assets/index-DoY6G_8O.js"></script>
+<script nomodule crossorigin src="/assets/polyfills-legacy-DnmCZJF6.js"></script>
+<script nomodule id="vite-legacy-entry" data-src="/assets/index-legacy-B9mZLyAM.js"></script>
+```
+
+არჩევანს **ბრაუზერი თვითონ აკეთებს**, უკვე HTML-ის წაკითხვისას:
+
+```
+   ახალი ბრაუზერი (Chrome 141)         ძველი ბრაუზერი (IE 11)
+            │                                     │
+            │           GET /                     │
+            ▼                                     ▼
+   ╔════════════════════════════════════════════════════════╗
+   ║   ერთი და იგივე index.html, ბაიტში ბაიტი               ║
+   ╚════════════════════════════════════════════════════════╝
+            │                                     │
+            ▼                                     ▼
+   <script type="module">                <script type="module">
+      ✅ ვიცი რა არის → ვტვირთავ            ❓ "module"? უცნობი ტიპია
+                                             → გამოვტოვებ
+   <script nomodule>                     <script nomodule>
+      ⏭️ ვიცი რა არის → ვგულებელყოფ          ✅ ჩვეულებრივი სკრიპტია
+                                             → ვტვირთავ
+            │                                     │
+            ▼                                     ▼
+   📥 index-DoY6G_8O.js                  📥 polyfills-legacy-*.js
+      (~151 kB)                             + index-legacy-*.js
+                                            (~217 kB)
+```
+
+**თითოეული ერთ კომპლექტს ტვირთავს, არასდროს ორივეს.**
+
+### 4.7.4 რატომ მუშაობს `nomodule` ხრიკი
+
+ეს HTML-ის სპეციფიკაციაშია ჩაშენებული, არა Vite-ის ჭკუა:
+
+| ატრიბუტი | ახალი ბრაუზერი | ძველი ბრაუზერი |
+|---|---|---|
+| `type="module"` | იცნობს → ტვირთავს | **უცნობი ტიპია** → გამოტოვებს |
+| `nomodule` | იცნობს → **შეგნებულად** უგულებელყოფს | ატრიბუტს ვერ ხედავს → ტვირთავს |
+
+ორივე მხარე ერთმანეთს ავსებს: ძველი ვერ ხედავს პირველს, ახალი უარს ამბობს მეორეზე.
+
+### 4.7.5 რატომ *ორი ფაილი*, როცა CSS-ს ერთი ჰყოფნის?
+
+ლექცია 2-ში Autoprefixer ორივე ვერსიას **ერთ** ფაილში წერდა:
+
+```css
+.navbar{position:-webkit-sticky;position:sticky}
+```
+
+JS-ში ასე არ გამოვა. მიზეზი ფუნდამენტურია:
+
+| | CSS | JavaScript |
+|---|---|---|
+| გაუგებარ კოდს რას უშვრება | **ხაზს** ჩუმად გამოტოვებს | **მთელი ფაილი** ჩავარდება (`SyntaxError`) |
+| შეიძლება ორივე ვერსია ერთ ფაილში? | ✅ დიახ | ❌ არა |
+| ფაილების რაოდენობა | **1** | **2** |
+| ვინ ირჩევს | არავინ — ერთია | ბრაუზერი, `module`/`nomodule`-ით |
+
+CSS მიმტევებელია: `position: sticky` თუ არ ესმის, ამ ერთ ხაზს გადაახტება.
+JS — არა: ერთი `?.` რომელიც ვერ გაიგო, და სკრიპტი **მთლიანად** კვდება, ჯერ კიდევ
+parse-ის ეტაპზე. ამიტომ ორი ცალკე ფაილი გარდაუვალია.
+
+### 4.7.6 პრაქტიკული დასკვნა
+
+`targets`-ის უსაფუძვლოდ გაფართოება **ყველას** ამძიმებს:
+
+```js
+legacy({ targets: ['ie >= 11'] })   // ← legacy ბანდლი საგრძნობლად გაიზრდება
+```
+
+`browserslist` არ უნდა იყოს „ყოველი შემთხვევისთვის ფართო" — ის შენი რეალური
+აუდიტორიის ანალიტიკას უნდა შეესაბამებოდეს.
+
+### 4.7.7 შეამოწმე თავად
+
+```bash
+npm run build
+npm run preview
+```
+
+```bash
+curl -s -A "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0)" http://localhost:4173/ | md5
+curl -s -A "Mozilla/5.0 (Macintosh) Chrome/141.0.0.0"           http://localhost:4173/ | md5
+```
+
+**ორივე md5 იდენტური იქნება** — სერვერი არავის არაფერს არჩევს. შემდეგ DevTools →
+Network-ში ნახე, რომ მხოლოდ ერთი კომპლექტი ჩამოიტვირთა.
+
+> **სრულყოფილებისთვის:** სერვერზე User-Agent-ით ბანდლის არჩევა
+> (*differential serving*) ტექნიკურად შესაძლებელია, მაგრამ პრაქტიკაში თითქმის
+> არ გამოიყენება — CDN-ის ქეშირებას ანგრევს (ერთი URL, სხვადასხვა შიგთავსი) და
+> UA-ს გაყალბება ადვილია. `module`/`nomodule` სწორედ ამიტომ გახდა სტანდარტი.
 
 ---
 

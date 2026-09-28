@@ -13,3 +13,9 @@ npm-debug.log*
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# ტესტირების artifact-ები (Playwright თვითონ ქმნის ყოველ გაშვებაზე)
+test-results/
+playwright-report/
+blob-report/
+.playwright/

@@ -1,97 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CodeComparison from './CodeComparison'
 
-const transpilationExamples = [
+/**
+ * ეს სექცია ნამდვილ Babel-ს უშვებს პირდაპირ ბრაუზერში (@babel/standalone).
+ * ქვემოთ მოცემული არცერთი "ტრანსპილირებული" შედეგი ხელით არ წერია —
+ * ყველა რეალურად გენერირდება გვერდის ჩატვირთვისას.
+ */
+const examples = [
   {
     title: 'Arrow Functions',
-    modern: `const greet = (name) => {
+    code: `const greet = (name) => {
   return \`Hello, \${name}!\`;
 };`,
-    transpiled: `var greet = function(name) {
-  return "Hello, " + name + "!";
-};`
   },
   {
     title: 'Destructuring',
-    modern: `const user = { name: 'Giorgi', age: 25 };
+    code: `const user = { name: 'Giorgi', age: 25 };
 const { name, age } = user;`,
-    transpiled: `var user = { name: 'Giorgi', age: 25 };
-var name = user.name;
-var age = user.age;`
   },
   {
     title: 'Template Literals',
-    modern: `const name = 'Nino';
+    code: `const name = 'Nino';
 const greeting = \`Hello, \${name}!
 Welcome to our site.\`;`,
-    transpiled: `var name = 'Nino';
-var greeting = "Hello, " + name + "!\\n" +
-  "Welcome to our site.";`
   },
   {
     title: 'Async/Await',
-    modern: `async function fetchUser(id) {
+    code: `async function fetchUser(id) {
   const response = await fetch(\`/api/users/\${id}\`);
   const user = await response.json();
   return user;
 }`,
-    transpiled: `function fetchUser(id) {
-  return regeneratorRuntime.async(function(context) {
-    while (1) switch (context.prev = context.next) {
-      case 0:
-        context.next = 2;
-        return fetch("/api/users/" + id);
-      case 2:
-        response = context.sent;
-        context.next = 5;
-        return response.json();
-      case 5:
-        user = context.sent;
-        return context.abrupt("return", user);
-    }
-  });
-}`
   },
   {
     title: 'Optional Chaining',
-    modern: `const city = user?.address?.city;
-const zip = user?.address?.zip ?? 'N/A';`,
-    transpiled: `var _user$address, _user$address2;
-var city = (_user$address = user.address) === null ||
-  _user$address === void 0 ? void 0 : _user$address.city;
-var zip = (_user$address2 = user.address) === null ||
-  _user$address2 === void 0 ? void 0 : _user$address2.zip;
-if (zip === null || zip === void 0) zip = 'N/A';`
+    code: `const city = user?.address?.city ?? 'უცნობი';`,
   },
   {
     title: 'Nullish Coalescing',
-    modern: `const volume = config.volume ?? 50;
-const theme = config.theme ?? 'dark';`,
-    transpiled: `var volume = config.volume !== null &&
-  config.volume !== void 0 ? config.volume : 50;
-var theme = config.theme !== null &&
-  config.theme !== void 0 ? config.theme : 'dark';`
+    code: `const port = config.port ?? 3000;
+const title = config.title ?? 'Default';`,
   },
   {
     title: 'Class Fields',
-    modern: `class Counter {
+    code: `class Counter {
   count = 0;
+  step = 1;
 
-  increment() {
-    this.count++;
-  }
+  increment = () => {
+    this.count += this.step;
+  };
 }`,
-    transpiled: `function Counter() {
-  this.count = 0;
-}
-
-Counter.prototype.increment = function() {
-  this.count++;
-};`
   },
   {
     title: 'Private Methods',
-    modern: `class BankAccount {
+    code: `class BankAccount {
   #balance = 0;
 
   #validate(amount) {
@@ -104,43 +67,119 @@ Counter.prototype.increment = function() {
     }
   }
 }`,
-    transpiled: `var _balance = new WeakMap();
-var _validate = new WeakMap();
+  },
+]
 
-function BankAccount() {
-  _balance.set(this, 0);
-  _validate.set(this, function(amount) {
-    return amount > 0;
-  });
-}
-
-BankAccount.prototype.deposit = function(amount) {
-  if (_validate.get(this).call(this, amount)) {
-    _balance.set(this, _balance.get(this) + amount);
-  }
-};`
-  }
+/**
+ * სამი სამიზნე კონფიგურაცია — შეცვლისას Babel-ის output რეალურად იცვლება.
+ * სწორედ ეს აჩვენებს, რომ „ტრანსპილაცია" ერთი ფიქსირებული რამ არ არის:
+ * ყველაფერს `targets` წყვეტს.
+ */
+const TARGET_PRESETS = [
+  {
+    id: 'es5',
+    label: 'ES5 (IE 11)',
+    hint: 'ყველაზე აგრესიული — ყველაფერი var-ებად და function-ებად იშლება',
+    targets: { ie: '11' },
+  },
+  {
+    id: 'safari12',
+    label: 'Safari 12',
+    hint: 'arrow function-ები რჩება, მაგრამ ?. და ??  გარდაიქმნება',
+    targets: { safari: '12' },
+  },
+  {
+    id: 'modern',
+    label: 'თანამედროვე',
+    hint: 'defaults — თითქმის არაფერი იცვლება',
+    targets: 'defaults, not IE 11',
+  },
 ]
 
 function TranspilationDemo() {
+  const [babel, setBabel] = useState(null)
+  const [error, setError] = useState(null)
+  const [targetId, setTargetId] = useState('es5')
+
+  // Babel დიდია (~3 MB), ამიტომ dynamic import-ით ცალკე chunk-ად იტვირთება —
+  // მთავარ ბანდლს არ ამძიმებს.
+  useEffect(() => {
+    let cancelled = false
+    import('@babel/standalone')
+      .then((mod) => {
+        if (!cancelled) setBabel(mod)
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const preset = TARGET_PRESETS.find((t) => t.id === targetId)
+
+  const results = React.useMemo(() => {
+    if (!babel) return []
+    return examples.map((example) => {
+      try {
+        const { code } = babel.transform(example.code, {
+          presets: [['env', { targets: preset.targets }]],
+          // ბრაუზერში მოდულის ნაცვლად სკრიპტად ვამუშავებთ,
+          // რომ output-ში "use strict" და export-ების ხმაური არ ჩაერიოს
+          sourceType: 'script',
+          comments: false,
+        })
+        return { ...example, transpiled: code }
+      } catch (err) {
+        return { ...example, transpiled: `// შეცდომა: ${err.message}` }
+      }
+    })
+  }, [babel, preset])
+
   return (
     <section className="transpilation-section">
       <h2 className="section-title">Babel ტრანსპილაცია</h2>
       <p className="section-desc">
-        Babel გარდაქმნის თანამედროვე JavaScript-ს (ES2015+) ძველ ES5 სინტაქსად,
-        რათა კოდი იმუშაოს ძველ ბრაუზერებში.
+        Babel გარდაქმნის თანამედროვე JavaScript-ს ისეთ სინტაქსად, რომელსაც
+        სამიზნე ბრაუზერები იცნობენ. მარჯვენა პანელი <strong>რეალური</strong>{' '}
+        Babel-ის output-ია — აქვე, ბრაუზერში გენერირებული.
       </p>
 
-      <div className="transpilation-grid">
-        {transpilationExamples.map((example, index) => (
-          <CodeComparison
-            key={index}
-            title={example.title}
-            modern={example.modern}
-            transpiled={example.transpiled}
-          />
+      <div className="target-picker">
+        <span className="target-picker-label">სამიზნე ბრაუზერები:</span>
+        {TARGET_PRESETS.map((t) => (
+          <button
+            key={t.id}
+            className={`target-btn ${t.id === targetId ? 'active' : ''}`}
+            onClick={() => setTargetId(t.id)}
+          >
+            {t.label}
+          </button>
         ))}
+        <p className="target-hint">{preset.hint}</p>
       </div>
+
+      {error && (
+        <p className="babel-status error">Babel ვერ ჩაიტვირთა: {error}</p>
+      )}
+
+      {!babel && !error && (
+        <p className="babel-status">⏳ Babel იტვირთება…</p>
+      )}
+
+      {babel && (
+        <div className="transpilation-grid">
+          {results.map((example) => (
+            <CodeComparison
+              key={example.title}
+              title={example.title}
+              modern={example.code}
+              transpiled={example.transpiled}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
